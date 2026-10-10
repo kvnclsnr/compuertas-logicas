@@ -1,7 +1,7 @@
 package com.simulador.modelo.compuertas;
 
 public abstract class Compuerta {
-    private String nombre;
+    protected  String nombre;
 
     public Compuerta(String nombre){
         this.nombre = nombre;

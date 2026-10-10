@@ -1,54 +1,44 @@
 package com.simulador.modelo.bancos;
 
+import java.util.ArrayList;
+
 import com.simulador.modelo.compuertas.Compuerta;
 
 public class Banco {
-    private Compuerta[] compuertas;
-    private int cantidad;
+    private ArrayList<Compuerta> compuertas;
 
-    public Banco( int capacidad ){
-        this.compuertas = new Compuerta[capacidad];
-        cantidad = 0;
+    public Banco(){
+        ArrayList<Compuerta> compuertas = new ArrayList<>();
     }
 
-    public boolean agregar(Compuerta compuerta){
-        if (cantidad < compuertas.length){
-            compuertas[cantidad] = compuerta;
-            cantidad ++;
-            return true;
-        }
-        return false;
+    public void agregar(Compuerta compuerta){
+        compuertas.add(compuerta);
     }
 
     public void evaluarTodas() {
-        for (int i = 0; i < cantidad; i++) {
-            System.out.println(compuertas[i].getNombre() + " = " + compuertas[i].evaluar());
+        for (Compuerta i : compuertas ){
+            i.evaluar();
         }
-
     }
 
     public int getCantidad() {
-        return cantidad;
+        return compuertas.size();
     }
 
     public void eliminar(String nombre){
-        for(int i = 0; i < cantidad; i++){
-            if(compuertas[i].getNombre().equals(nombre) ){
-                for (int j = i; j < cantidad - 1; j++){
-                    compuertas[j] = compuertas[j + 1];
-                }
-                compuertas[cantidad] = null;
-                cantidad--;
+        for (Compuerta i : compuertas){
+            if (i.getNombre().equals(nombre)){
+                compuertas.remove(i);
             }
         }
     }
 
-    public int buscar(String nombre){
-        for (int i = 0; i < cantidad; i++){
-            if (nombre.equals(compuertas[i].getNombre())) {
-                return i;
+    public Compuerta buscar(String nombre){
+        for (int i = 0; i < compuertas.size(); i++){
+            if (compuertas.get(i).getNombre().equals(nombre)){
+                return compuertas.get(i);
             }
         }
-        return -1;
+        return null;
     }
 }
