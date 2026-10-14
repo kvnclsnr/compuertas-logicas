@@ -6,7 +6,7 @@ public class CompuertaNOT extends Compuerta{
     private EntradaLogica A;
     
     public CompuertaNOT(EntradaLogica A, String ID) {
-        super(ID);
+        super(ID, A);
         this.A = A;
     }
     

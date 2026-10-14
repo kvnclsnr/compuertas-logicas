@@ -7,8 +7,8 @@ import com.simulador.modelo.compuertas.Compuerta;
 public class Banco {
     private ArrayList<Compuerta> compuertas;
 
-    public Banco(){
-        ArrayList<Compuerta> compuertas = new ArrayList<>();
+    public Banco(ArrayList<Compuerta> compuertas){
+        this.compuertas = compuertas;
     }
 
     public void agregar(Compuerta compuerta){
@@ -30,6 +30,7 @@ public class Banco {
             if (i.getNombre().equals(nombre)){
                 compuertas.remove(i);
             }
+            break;
         }
     }
 
