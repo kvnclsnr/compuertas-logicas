@@ -4,11 +4,12 @@ import com.simulador.modelo.EntradaLogica;
 
 public class CompuertaNAND extends Compuerta {
     
-    public CompuertaNAND(EntradaLogica A, EntradaLogica B, String ID ) {
+    public CompuertaNAND(EntradaLogica A, EntradaLogica B, String ID) {
         super(ID, A, B);
     }
     
+    @Override
     public boolean evaluar() {
-        return !(A.getValor() && B.getValor());
+        return !(getEntradaA().getValor() && getEntradaB().getValor());
     }
 }
