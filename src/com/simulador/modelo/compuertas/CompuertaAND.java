@@ -10,6 +10,6 @@ public class CompuertaAND extends Compuerta {
     
     @Override 
     public boolean evaluar() {
-        return A.getValor() && B.getValor();
+        return getEntradaA().getValor() && getEntradaB().getValor();
     }
 }

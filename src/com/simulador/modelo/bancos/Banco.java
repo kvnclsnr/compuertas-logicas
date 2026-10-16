@@ -6,40 +6,41 @@ import com.simulador.modelo.compuertas.Compuerta;
 
 public class Banco {
     private ArrayList<Compuerta> compuertas;
-
-    public Banco(ArrayList<Compuerta> compuertas){
+    
+    public Banco(ArrayList<Compuerta> compuertas) {
         this.compuertas = compuertas;
     }
-
-    public void agregar(Compuerta compuerta){
+    
+    public void agregar(Compuerta compuerta) {
         compuertas.add(compuerta);
     }
-
+    
     public void evaluarTodas() {
-        for (Compuerta i : compuertas ){
-            i.evaluar();
+        for (Compuerta compuerta : compuertas) {
+            compuerta.evaluar();
         }
     }
-
+    
     public int getCantidad() {
         return compuertas.size();
     }
-
+    
     public void eliminar(String nombre){
-        for (Compuerta i : compuertas){
-            if (i.getNombre().equals(nombre)){
+        for (int i = 0; i < compuertas.size(); i++) {
+            if (compuertas.get(i).getNombre().equals(nombre)) {
                 compuertas.remove(i);
+                return;
             }
-            break;
         }
     }
-
+    
     public Compuerta buscar(String nombre){
-        for (int i = 0; i < compuertas.size(); i++){
-            if (compuertas.get(i).getNombre().equals(nombre)){
-                return compuertas.get(i);
+        for (Compuerta compuerta : compuertas) {
+            if (compuerta.getNombre().equals(nombre)) {
+                return compuerta;
             }
         }
+        
         return null;
     }
 }

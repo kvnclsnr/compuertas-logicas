@@ -8,7 +8,8 @@ public class CompuertaXNOR extends Compuerta{
         super(ID, A, B);
     }
     
+    @Override
     public boolean evaluar() {
-        return A.getValor() == B.getValor();
+        return getEntradaA().getValor() == getEntradaB().getValor();
     }
 }
