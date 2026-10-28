@@ -1,26 +1,25 @@
 package com.simulator.model.gates;
 
 import com.simulator.model.LogicInput;
+import com.simulator.model.circuit.Circuit;
 
 public class GateTest {
     public static void main(String[] args) {
-        LogicInput inputA = new LogicInput("A", true);
-        LogicInput inputB = new LogicInput("B", false);
+        LogicInput inputA = new LogicInput("A");
+        LogicInput inputB = new LogicInput("B");
+        LogicInput inputC = new LogicInput("C");
+        LogicInput inputD = new LogicInput("D");
         
-        Gate and = new AndGate(inputA, inputB, "AND-Gate");
-        Gate or = new OrGate(inputA, inputB, "OR-Gate");
-        Gate not = new NotGate(inputA, "NOT-Gate");
-        Gate nand = new NandGate(inputA, inputB, "NAND-Gate");
-        Gate nor = new NorGate(inputA, inputB, "NOR-Gate");
-        Gate xor = new XorGate(inputA, inputB, "XOR-Gate");
-        Gate xnor = new XnorGate(inputA, inputB, "XNOR-Gate");
+        Circuit circuit = new Circuit("Demostracion de compuertas");
         
-        and.showTruthTable();
-        or.showTruthTable();
-        not.showTruthTable();
-        nand.showTruthTable();
-        nor.showTruthTable();
-        xor.showTruthTable();
-        xnor.showTruthTable();
+        Gate andGate = new AndGate("AND", inputA, inputB);
+        Gate nandGate = new NandGate("NAND", inputC, inputD);
+        Gate outputGate = new OrGate("Output", andGate, nandGate);
+        
+        circuit.addGate(andGate);
+        circuit.addGate(outputGate);
+        
+        circuit.printTruthTable();
+        circuit.printTruthTable(nandGate);
     }
 }

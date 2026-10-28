@@ -1,15 +1,29 @@
 package com.simulator.model.gates;
 
-import com.simulator.model.LogicInput;
+import com.simulator.model.LogicSource;
 
 public class XnorGate extends Gate {
+    private LogicSource inputA;
+    private LogicSource inputB;
     
-    public XnorGate(LogicInput inputA, LogicInput inputB, String name) {
-        super(name, inputA, inputB);
+    public XnorGate(String name, LogicSource inputA, LogicSource inputB) {
+        super(name);
+        this.inputA = inputA;
+        this.inputB = inputB;
     }
     
     @Override
     public boolean evaluate() {
-        return getInputA().getValue() == getInputB().getValue();
+        return inputA.getValue() == inputB.getValue();
+    }
+    
+    @Override
+    public LogicSource[] getInputs() {
+        return new LogicSource[] { inputA, inputB };
+    }
+    
+    @Override
+    public String getOperator() {
+        return "XNOR";
     }
 }

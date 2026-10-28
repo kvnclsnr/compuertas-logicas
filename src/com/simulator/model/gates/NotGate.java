@@ -1,15 +1,27 @@
 package com.simulator.model.gates;
 
-import com.simulator.model.LogicInput;
+import com.simulator.model.LogicSource;
 
 public class NotGate extends Gate {
+    private LogicSource input;
     
-    public NotGate(LogicInput inputA, String name) {
-        super(name, inputA);
+    public NotGate(String name, LogicSource input) {
+        super(name);
+        this.input = input;
     }
     
     @Override
     public boolean evaluate() {
-        return !getInputA().getValue();
+        return !input.getValue();
+    }
+    
+    @Override
+    public LogicSource[] getInputs() {
+        return new LogicSource[] { input };
+    }
+    
+    @Override
+    public String getOperator() {
+        return "NOT";
     }
 }

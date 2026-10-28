@@ -1,101 +1,48 @@
 package com.simulator.model.gates;
 
-import com.simulator.model.LogicInput;
+import com.simulator.model.LogicSource;
 
-public abstract class Gate {
+public abstract class Gate implements LogicSource {
     private String name;
     
-    private LogicInput inputA;
-    private LogicInput inputB;
-    
-    public Gate(String name, LogicInput inputA, LogicInput inputB) {
+    public Gate(String name) {
         this.name = name;
-        this.inputA = inputA;
-        this.inputB = inputB;
-    }
-    
-    public Gate(String name, LogicInput inputA) {
-        this.name = name;
-        this.inputA = inputA;
-        this.inputB = null;
     }
     
     public String getName() {
         return name;
     }
     
-    protected LogicInput getInputA() {
-        return inputA;
-    }
-    
-    protected LogicInput getInputB() {
-        return inputB;
-    }
-    
     public abstract boolean evaluate();
     
-    public void showTruthTable() {
-        boolean[] inputValues = {true, false};
+    public abstract LogicSource[] getInputs();
+    
+    public abstract String getOperator();
+    
+    @Override
+    public String getExpression() {
+        LogicSource[] inputs = getInputs();
         
-        boolean hasTwoInputs = inputB != null;
-        
-        boolean originalInputA = inputA.getValue();
-        boolean originalInputB = hasTwoInputs ? inputB.getValue() : false;
-        
-        System.out.println("Truth Table: " + name + "\n");
-        
-        if (hasTwoInputs) {
-            String rowDivider = "+-----+-----+---------+";
-            
-            System.out.println(rowDivider);
-            System.out.println("|  A  |  B  | Result  |");
-            System.out.println(rowDivider);
-            
-            for (boolean valueA : inputValues) {
-                for (boolean valueB : inputValues) {
-                    inputA.setValue(valueA);
-                    inputB.setValue(valueB);
-                    
-                    boolean result = evaluate();
-                    
-                    System.out.printf(
-                        "|  %d  |  %d  |    %d    |%n",
-                        valueA ? 1 : 0,
-                        valueB ? 1 : 0,
-                        result ? 1 : 0
-                    );
-                }
-            }
-            System.out.println(rowDivider);
+        if (inputs.length == 1) {
+            return getOperator() + " " + formatInputExpression(inputs[0]);
         }
         
-        else {
-            String rowDivider = "+-----+---------+";
-            
-            System.out.println(rowDivider);
-            System.out.println("|  A  | Result  |");
-            System.out.println(rowDivider);
-            
-            for (boolean valueA : inputValues) {
-                inputA.setValue(valueA);
-                
-                boolean result = evaluate();
-                
-                System.out.printf(
-                    "|  %d  |    %d    |%n",
-                    valueA ? 1 : 0,
-                    result ? 1 : 0
-                );
-            }
-            System.out.println(rowDivider);
+        return formatInputExpression(inputs[0]) + " "
+                + getOperator() + " " + formatInputExpression(inputs[1]);
+    }
+    
+    @Override
+    public boolean getValue() {
+        return evaluate();
+    }
+    
+    private String formatInputExpression(LogicSource input) {
+        String expression = input.getExpression();
+        
+        if (input instanceof Gate gate && gate.getInputs().length > 1) {
+            return "(" + expression + ")";
         }
         
-        System.out.println();
-        
-        inputA.setValue(originalInputA);
-        
-        if (hasTwoInputs) {
-            inputB.setValue(originalInputB);
-        }
+        return expression;
     }
 }
