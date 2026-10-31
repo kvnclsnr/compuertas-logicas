@@ -1,4 +1,4 @@
-package com.simulator.model;
+package com.engine;
 
 public class LogicInput implements LogicSource {
     private String name;

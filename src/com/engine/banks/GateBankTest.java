@@ -24,7 +24,7 @@
 // DEPRECATED
 // DEPRECATED
 
-package com.simulator.model.banks;
+package com.engine.banks;
 
 public class GateBankTest {
     public static void main(String[] args) {

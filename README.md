@@ -1,6 +1,8 @@
 # Simulador de compuertas lógicas
 
-Aplicación de consola desarrollada en Java para modelar compuertas lógicas, conectarlas en circuitos y generar sus tablas de verdad
+Proyecto en Java para modelar compuertas lógicas, conectarlas en circuitos y generar tablas de verdad. El motor lógico funciona en consola y el desarrollo de la interfaz gráfica con Java Swing está en progreso.
+
+Actualmente, la ventana Swing presenta una galería visual de las compuertas disponibles. La creación y simulación interactiva de circuitos desde la interfaz todavía está pendiente.
 
 ## Autores
 
@@ -10,75 +12,105 @@ Aplicación de consola desarrollada en Java para modelar compuertas lógicas, co
 
 ## Funcionalidades
 
-- Representa entradas lógicas con nombre y valor booleano
-- Modela las operaciones AND, NAND, NOR, NOT, OR, XNOR y XOR
-- Permite conectar entradas y compuertas para formar circuitos
-- Muestra la tabla de verdad de cada compuerta agregada al circuito o de una compuerta específica
-- Detecta automáticamente las entradas utilizadas y muestra las expresiones de las compuertas que forman la salida
-- Permite consultar, evaluar y eliminar compuertas de un circuito
+### Motor lógico
+
+- Representa entradas con nombre y valor booleano.
+- Modela las operaciones AND, NAND, NOR, NOT, OR, XNOR y XOR.
+- Permite conectar entradas y compuertas para formar circuitos compuestos.
+- Evalúa compuertas según los valores actuales de sus entradas.
+- Genera tablas de verdad para las compuertas de un circuito o para una compuerta específica.
+- Detecta las entradas utilizadas y ordena las compuertas según sus dependencias al generar una tabla.
+- Muestra las expresiones lógicas correspondientes a las compuertas.
+- Permite consultar, evaluar y eliminar compuertas de un circuito mediante la API de `Circuit`.
+
+### Interfaz gráfica en progreso
+
+- Muestra las siete compuertas en una ventana Swing, cada una identificada con su nombre.
+- Dibuja los iconos con `Graphics2D` y `Path2D`, con trazos suavizados.
+- Permite definir el tamaño de los iconos mediante el constructor de cada componente.
+- Por ahora, la interfaz es una galería estática: aún no permite armar circuitos ni mostrar sus resultados.
 
 ## Organización del proyecto
 
 ```text
 src/
-└── com/simulator/model/
-    ├── LogicInput.java
-    ├── LogicSource.java
-    ├── banks/
-    │   ├── GateBank.java
-    │   └── GateBankTest.java
-    ├── circuit/
-    │   └── Circuit.java
-    └── gates/
-        ├── Gate.java
-        ├── AndGate.java
-        ├── NandGate.java
-        ├── NorGate.java
-        ├── NotGate.java
-        ├── OrGate.java
-        ├── XnorGate.java
-        ├── XorGate.java
-        └── GateTest.java
+└── com/
+    ├── engine/
+    │   ├── LogicInput.java
+    │   ├── LogicSource.java
+    │   ├── banks/
+    │   │   ├── GateBank.java          # Obsoleto
+    │   │   └── GateBankTest.java      # Vacío y obsoleto
+    │   ├── circuit/
+    │   │   └── Circuit.java
+    │   └── gates/
+    │       ├── Gate.java
+    │       ├── AndGate.java
+    │       ├── NandGate.java
+    │       ├── NorGate.java
+    │       ├── NotGate.java
+    │       ├── OrGate.java
+    │       ├── XnorGate.java
+    │       ├── XorGate.java
+    │       └── GateTest.java
+    └── ui/
+        ├── App.java
+        └── gates/
+            ├── LogicGateIcon.java
+            ├── AndGate.java
+            ├── NandGate.java
+            ├── NorGate.java
+            ├── NotGate.java
+            ├── OrGate.java
+            ├── XnorGate.java
+            └── XorGate.java
 ```
 
-`LogicSource` define la interfaz común para entradas y compuertas, mientras que `Gate` implementa el comportamiento compartido por los distintos tipos de compuerta
+`LogicSource` define la interfaz común de las entradas y las compuertas. `Gate` proporciona la base para evaluar compuertas y construir sus expresiones. `Circuit` administra las compuertas conectadas y genera las tablas de verdad. `GateBank` está obsoleto y no forma parte del flujo principal.
 
-`Circuit` administra las compuertas y genera las tablas de verdad. `GateBank` está obsoleto y ya no forma parte del flujo principal
+La interfaz Swing se encuentra en `com.ui`. `LogicGateIcon` comparte la lógica de dibujo y escalado; cada clase de compuerta define su propio trazado.
 
 ## Requisitos
 
-- JDK 26, según la versión configurada para compilar el proyecto
-- Apache Ant para compilar
-- NetBeans es opcional y permite abrir el proyecto con su configuración de Ant
+- JDK 26, de acuerdo con la configuración del proyecto.
+- Apache Ant para compilar desde la terminal.
+- NetBeans es opcional; el proyecto incluye configuración de Ant para abrirlo desde ese IDE.
 
 ## Compilar
 
-Desde la carpeta raíz del proyecto, ejecuta:
+Desde la carpeta raíz del proyecto:
 
 ```bash
 ant compile
 ```
 
-Las clases compiladas se guardan en `build/classes`
+Las clases compiladas se guardan en `build/classes`.
 
-## Ejecutar la demostración
+## Ejecutar la interfaz gráfica
 
-La clase `GateTest` contiene el ejemplo de uso del proyecto. Después de compilar, ejecútala con:
+Después de compilar, ejecuta:
 
 ```bash
-java -cp build/classes com.simulator.model.gates.GateTest
+java -cp build/classes com.ui.App
 ```
 
-El ejemplo crea un circuito con compuertas AND, NAND y OR, imprime las tablas de las compuertas registradas y luego muestra la tabla de una compuerta específica
+En NetBeans, la clase principal configurada para ejecutar el proyecto es `com.ui.App`.
 
-## Uso de las tablas de verdad
+## Ejecutar la demostración del motor
 
-`printTruthTable()` muestra las tablas de todas las compuertas agregadas al circuito
+La clase `GateTest` construye un circuito de ejemplo con entradas, compuertas AND, NAND y OR, e imprime tablas de verdad en la consola. Para ejecutarla:
 
-`printTruthTable(gate)` muestra la tabla de la compuerta indicada, aunque no esté agregada individualmente al circuito
+```bash
+java -cp build/classes com.engine.gates.GateTest
+```
 
-Las entradas se obtienen recorriendo la compuerta y sus dependencias, por lo que no es necesario pasar una lista de entradas
+## Tablas de verdad
+
+- `printTruthTable()` muestra las tablas de las compuertas agregadas al circuito.
+- `printTruthTable(gate)` muestra la tabla de la compuerta indicada, aunque no esté agregada individualmente al circuito.
+
+Las entradas se obtienen recorriendo la compuerta solicitada y sus dependencias. El circuito restaura los valores originales de las entradas después de generar la tabla.
 
 ## Estado del proyecto
 
-El simulador genera tablas de verdad para circuitos compuestos y compuertas individuales. `GateBankTest` está vacío y no hay pruebas automatizadas configuradas todavía
+El motor permite evaluar circuitos compuestos y generar tablas de verdad en consola. La interfaz gráfica está en desarrollo y actualmente muestra los iconos de las siete compuertas; la edición visual y simulación de circuitos desde la ventana están pendientes. No hay un conjunto de pruebas automatizadas configurado.

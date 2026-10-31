@@ -1,13 +1,13 @@
-package com.simulator.model.circuit;
+package com.engine.circuit;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.simulator.model.LogicInput;
-import com.simulator.model.LogicSource;
-import com.simulator.model.gates.Gate;
+import com.engine.LogicInput;
+import com.engine.LogicSource;
+import com.engine.gates.Gate;
 
 public class Circuit {
     private String name;

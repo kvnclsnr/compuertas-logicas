@@ -1,4 +1,4 @@
-package com.simulator.model;
+package com.engine;
 
 public interface LogicSource {
     boolean getValue();
