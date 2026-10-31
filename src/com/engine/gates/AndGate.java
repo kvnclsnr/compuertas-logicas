@@ -1,12 +1,12 @@
-package com.simulator.model.gates;
+package com.engine.gates;
 
-import com.simulator.model.LogicSource;
+import com.engine.LogicSource;
 
-public class XorGate extends Gate {
+public class AndGate extends Gate {
     private LogicSource inputA;
     private LogicSource inputB;
     
-    public XorGate(String name, LogicSource inputA, LogicSource inputB) {
+    public AndGate(String name, LogicSource inputA, LogicSource inputB) {
         super(name);
         this.inputA = inputA;
         this.inputB = inputB;
@@ -14,7 +14,7 @@ public class XorGate extends Gate {
     
     @Override
     public boolean evaluate() {
-        return inputA.getValue() != inputB.getValue();
+        return inputA.getValue() && inputB.getValue();
     }
     
     @Override
@@ -24,6 +24,6 @@ public class XorGate extends Gate {
     
     @Override
     public String getOperator() {
-        return "XOR";
+        return "AND";
     }
 }

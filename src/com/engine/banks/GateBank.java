@@ -24,11 +24,11 @@
 // DEPRECATED
 // DEPRECATED
 
-package com.simulator.model.banks;
+package com.engine.banks;
 
 import java.util.ArrayList;
 
-import com.simulator.model.gates.Gate;
+import com.engine.gates.Gate;
 
 public class GateBank {
     private ArrayList<Gate> gates;

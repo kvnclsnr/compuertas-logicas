@@ -1,6 +1,6 @@
-package com.simulator.model.gates;
+package com.engine.gates;
 
-import com.simulator.model.LogicSource;
+import com.engine.LogicSource;
 
 public abstract class Gate implements LogicSource {
     private String name;

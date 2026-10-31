@@ -1,7 +1,7 @@
-package com.simulator.model.gates;
+package com.engine.gates;
 
-import com.simulator.model.LogicInput;
-import com.simulator.model.circuit.Circuit;
+import com.engine.LogicInput;
+import com.engine.circuit.Circuit;
 
 public class GateTest {
     public static void main(String[] args) {
