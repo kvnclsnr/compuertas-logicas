@@ -1,5 +1,9 @@
 package com.engine.gates;
 
+import java.util.List;
+import java.util.Set;
+
+import com.engine.LogicInput;
 import com.engine.LogicSource;
 
 public abstract class Gate implements LogicSource {
@@ -44,5 +48,32 @@ public abstract class Gate implements LogicSource {
         }
         
         return expression;
+    }
+
+    @Override
+    public boolean isCompoundExpression() {
+        LogicSource[] inputs = getInputs();
+        return inputs != null && inputs.length > 1;
+    }
+
+    //recorre recursivamente las entradas y las añade al orden de evaluacion
+    //delega según el tipo real del objeto sin instanceof
+    @Override
+    public void collectInputs(Set<LogicInput> primaryInputs, List<Gate> evaluationOrder, Set<Gate> visitedGates) {
+        if (visitedGates.contains(this)) {
+            return;
+        }
+        visitedGates.add(this);
+        
+        LogicSource[] inputs = getInputs();
+        if (inputs != null) {
+            for (LogicSource input : inputs) {
+                if (input != null) {
+                    input.collectInputs(primaryInputs, evaluationOrder, visitedGates);
+                }
+            }
+        }
+        
+        evaluationOrder.add(this);
     }
 }

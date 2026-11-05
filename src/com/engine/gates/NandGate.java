@@ -2,19 +2,21 @@ package com.engine.gates;
 
 import com.engine.LogicSource;
 
-public class NandGate extends Gate {
-    private LogicSource inputA;
-    private LogicSource inputB;
+public class NandGate extends BinaryGate {
+
+    public  NandGate(String name){
+        super(name);
+    }
     
     public NandGate(String name, LogicSource inputA, LogicSource inputB) {
-        super(name);
-        this.inputA = inputA;
-        this.inputB = inputB;
+        super(name, inputA, inputB);
     }
     
     @Override
     public boolean evaluate() {
-        return !(inputA.getValue() && inputB.getValue());
+        boolean valA = inputA != null && inputA.getValue();
+        boolean valB = inputA != null && inputB.getValue();
+        return  !(valA && valB);
     }
     
     @Override

@@ -2,19 +2,21 @@ package com.engine.gates;
 
 import com.engine.LogicSource;
 
-public class XnorGate extends Gate {
-    private LogicSource inputA;
-    private LogicSource inputB;
-    
-    public XnorGate(String name, LogicSource inputA, LogicSource inputB) {
+public class XnorGate extends BinaryGate {
+
+    public XnorGate(String name){
         super(name);
-        this.inputA = inputA;
-        this.inputB = inputB;
+    }
+
+    public XnorGate(String name, LogicSource inputA, LogicSource inputB) {
+        super(name, inputA, inputB);
     }
     
     @Override
     public boolean evaluate() {
-        return inputA.getValue() == inputB.getValue();
+        boolean valA = inputA != null && inputA.getValue();
+        boolean valB = inputB != null && inputB.getValue();
+        return valA == valB;
     }
     
     @Override

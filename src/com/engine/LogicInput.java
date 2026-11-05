@@ -1,5 +1,10 @@
 package com.engine;
 
+import java.util.List;
+import java.util.Set;
+
+import com.engine.gates.Gate;
+
 public class LogicInput implements LogicSource {
     private String name;
     private boolean value;
@@ -29,5 +34,11 @@ public class LogicInput implements LogicSource {
     
     public String getName() {
         return name;
+    }
+
+    //como eta es una entrada logica se agrega a si misma
+    @Override
+    public void collectInputs(Set<LogicInput> primaryInputs, List<Gate> evaluationOrder, Set<Gate> visitedGates) {
+        primaryInputs.add(this);
     }
 }

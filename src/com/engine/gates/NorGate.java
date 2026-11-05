@@ -2,19 +2,21 @@ package com.engine.gates;
 
 import com.engine.LogicSource;
 
-public class NorGate extends Gate {
-    private LogicSource inputA;
-    private LogicSource inputB;
+public class NorGate extends BinaryGate {
+
+    public NorGate(String name){
+        super(name);
+    }
     
     public NorGate(String name, LogicSource inputA, LogicSource inputB) {
-        super(name);
-        this.inputA = inputA;
-        this.inputB = inputB;
+        super(name, inputA, inputB);
     }
     
     @Override
     public boolean evaluate() {
-        return !(inputA.getValue() || inputB.getValue());
+        boolean valA = inputA != null && inputA.getValue();
+        boolean valB = inputB != null && inputB.getValue();
+        return  !(valA || valB);
     }
     
     @Override
