@@ -6,7 +6,7 @@ public abstract class BinaryGate extends Gate{
     // estas es una clase abstracta para las compuertas de 2 entradas logicas
     protected LogicSource inputA;
     protected LogicSource inputB;
-
+    
     public BinaryGate(String name){
         this(name, null, null);
     }
@@ -15,7 +15,7 @@ public abstract class BinaryGate extends Gate{
         this.inputA = inputA;
         this.inputB = inputB;
     }
-
+    
     public LogicSource getInputA() {
         return inputA;
     }
@@ -40,5 +40,13 @@ public abstract class BinaryGate extends Gate{
     @Override
     public LogicSource[] getInputs() {
         return new LogicSource[] { inputA, inputB };
+    }
+    
+    protected boolean getInputAValue() {
+        return inputA != null && inputA.getValue();
+    }
+    
+    protected boolean getInputBValue() {
+        return inputB != null && inputB.getValue();
     }
 }

@@ -12,14 +12,14 @@ public class GateTest {
         
         Circuit circuit = new Circuit("Demostracion de compuertas");
         
-        Gate andGate = new AndGate("AND", inputA, inputB);
-        Gate nandGate = new NandGate("NAND", inputC, inputD);
-        Gate outputGate = new OrGate("Output", andGate, nandGate);
+        Gate andGate = GateFactory.createGate(GateFactory.Type.AND, "AND", inputA, inputB);
+        Gate nandGate = GateFactory.createGate(GateFactory.Type.NAND, "NAND", inputC, inputD);
+        Gate outputGate = GateFactory.createGate(GateFactory.Type.OR, "Output", andGate, nandGate);
         
         circuit.addGate(andGate);
         circuit.addGate(outputGate);
         
-        circuit.printTruthTable();
-        circuit.printTruthTable(nandGate);
+        circuit.showTruthTable();
+        circuit.showTruthTable(nandGate);
     }
 }

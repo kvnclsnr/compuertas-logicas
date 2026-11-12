@@ -3,7 +3,7 @@ package com.engine.gates;
 import com.engine.LogicSource;
 
 public class NorGate extends BinaryGate {
-
+    
     public NorGate(String name){
         super(name);
     }
@@ -14,14 +14,7 @@ public class NorGate extends BinaryGate {
     
     @Override
     public boolean evaluate() {
-        boolean valA = inputA != null && inputA.getValue();
-        boolean valB = inputB != null && inputB.getValue();
-        return  !(valA || valB);
-    }
-    
-    @Override
-    public LogicSource[] getInputs() {
-        return new LogicSource[] { inputA, inputB };
+        return !(getInputAValue() || getInputBValue());
     }
     
     @Override

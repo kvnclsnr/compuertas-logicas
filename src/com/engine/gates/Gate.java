@@ -7,7 +7,7 @@ import com.engine.LogicInput;
 import com.engine.LogicSource;
 
 public abstract class Gate implements LogicSource {
-    private String name;
+    private final String name;
     
     public Gate(String name) {
         this.name = name;
@@ -49,13 +49,13 @@ public abstract class Gate implements LogicSource {
         
         return expression;
     }
-
+    
     @Override
     public boolean isCompoundExpression() {
         LogicSource[] inputs = getInputs();
         return inputs != null && inputs.length > 1;
     }
-
+    
     //recorre recursivamente las entradas y las añade al orden de evaluacion
     //delega según el tipo real del objeto sin instanceof
     @Override

@@ -18,6 +18,8 @@ public class Circuit {
         this.gates = new ArrayList<>();
     }
     
+    // GENERAL METHODS
+    
     public void addGate(Gate gate) {
         gates.add(gate);
     }
@@ -55,22 +57,22 @@ public class Circuit {
         return name;
     }
     
-    public void printTruthTable() {
-        System.out.println("< Circuito: " + this.name + " >\n");
-        
-        for (Gate gate : gates) {
-            TruthTable(gate);
-        }
-    }
+    // TRUTH TABLE - GENERAL
     
-    public void printTruthTable(Gate outputGate) {
-        System.out.println("< Circuito: " + this.name + " >\n");
-        
-        TruthTable(outputGate);
-    }
+    /* 
+     *  Example: A AND B
+     *  
+     *  {
+     *    { "A", "B", "A AND B" },
+     *    { "0", "0",    "0"    },
+     *    { "0", "1",    "0"    },
+     *    { "1", "0",    "0"    },
+     *    { "1", "1",    "1"    }
+     *  }
+     */
     
-    private void TruthTable(Gate outputGate) {
-        if (outputGate == null) return;
+    public String[][] getTruthTable(Gate outputGate) {
+        if (outputGate == null) return new String[0][0];
         
         List<LogicInput> inputs = new ArrayList<>();
         List<Gate> evaluationOrder = new ArrayList<>();
@@ -79,115 +81,23 @@ public class Circuit {
             evaluationOrder, outputGate, new HashSet<>(), inputs, new HashSet<>()
         );
         
-        int inputCount = inputs.size();
-        int rowCount = (int) Math.pow(2, inputCount);
+        int rowCount = (int) Math.pow(2, inputs.size());
         
-        String[] columnHeaders = createColumnHeaders(inputs, evaluationOrder);
-        int[] columnWidths = getColumnWidths(columnHeaders);
+        String[][] table = new String[rowCount + 1][];
         boolean[] originalInputValues = saveInputValues(inputs);
         
-        System.out.println("# Tabla de Verdad: " + outputGate.getName() + "\n");
+        table[0] = createColumnHeaders(inputs, evaluationOrder);
         
-        printTableBorder(columnWidths);
-        printTableRow(columnHeaders, columnWidths);
-        printTableBorder(columnWidths);
-        
-        try {
-            for (int row = 0; row < rowCount; row++) {
-                String[] rowValues = createRowValues(
-                    row, inputs, evaluationOrder
-                );
-                
-                printTableRow(rowValues, columnWidths);
-            }
+        for (int row = 0; row < rowCount; row++) {
+            table[row + 1] = createRowValues(row, inputs, evaluationOrder);
         }
         
-        finally {
-            restoreInputValues(inputs, originalInputValues);
-        }
+        restoreInputValues(inputs, originalInputValues);
         
-        printTableBorder(columnWidths);
-        
-        System.out.println();
+        return table;
     }
     
-    // PRIVATE METHODS (PRINT TRUTH TABLE)
-    
-    private String[] createColumnHeaders(List<LogicInput> inputs, List<Gate> evaluationOrder) { // OK
-        
-        String[] headers = new String[inputs.size() + evaluationOrder.size()];
-        
-        int columnIndex = 0;
-        
-        for (LogicInput input : inputs) {
-            headers[columnIndex] = input.getName();
-            columnIndex++;
-        }
-        
-        for (Gate gate : evaluationOrder) {
-            headers[columnIndex] = gate.getExpression();
-            columnIndex++;
-        }
-        
-        return headers;
-    }
-    
-    private int[] getColumnWidths(String[] columnHeaders) { // OK
-        int[] columnWidths = new int[columnHeaders.length];
-        
-        for (int i = 0; i < columnHeaders.length; i++) {
-            columnWidths[i] = columnHeaders[i].length();
-        }
-        
-        return columnWidths;
-    }
-    
-    private boolean[] saveInputValues(List<LogicInput> inputs) { // OK
-        boolean[] originalValues = new boolean[inputs.size()];
-        
-        for (int i = 0; i < inputs.size(); i++) {
-            originalValues[i] = inputs.get(i).getValue();
-        }
-        
-        return originalValues;
-    }
-    
-    private void restoreInputValues(List<LogicInput> inputs, boolean[] originalValues) { // OK
-        for (int i = 0; i < inputs.size(); i++) {
-            inputs.get(i).setValue(originalValues[i]);
-        }
-    }
-    
-    private String[] createRowValues(int row, List<LogicInput> inputs, List<Gate> evaluationOrder) {
-        String[] rowValues = new String[inputs.size() + evaluationOrder.size()];
-        
-        setInputValues(row, inputs, rowValues);
-        setGateValues(inputs.size(), evaluationOrder, rowValues);
-        
-        return rowValues;
-    }
-    
-    private void setInputValues(int row, List<LogicInput> inputs, String[] rowValues) {
-        int inputCount = inputs.size();
-        
-        for (int i = 0; i < inputCount; i++) {
-            int bitPosition = inputCount - i - 1;
-            boolean inputValue = ((row >> bitPosition) & 1) == 1;
-            
-            inputs.get(i).setValue(inputValue);
-            rowValues[i] = inputValue ? "1" : "0";
-        }
-    }
-    
-    private void setGateValues(int inputCount, List<Gate> evaluationOrder, String[] rowValues) { // OK
-        for (int i = 0; i < evaluationOrder.size(); i++) {
-            int columnIndex = inputCount + i;
-            
-            rowValues[columnIndex] = evaluationOrder.get(i).evaluate() ? "1" : "0";
-        }
-    }
-    
-    private void collectGatesInEvaluationOrder(List<Gate> evaluationOrder, Gate gate, Set<Gate> visitedGates, List<LogicInput> inputs, Set<LogicInput> visitedInputs) { // OK
+    private void collectGatesInEvaluationOrder(List<Gate> evaluationOrder, Gate gate, Set<Gate> visitedGates, List<LogicInput> inputs, Set<LogicInput> visitedInputs) {
         if (visitedGates.contains(gate)) return;
         
         visitedGates.add(gate);
@@ -215,7 +125,147 @@ public class Circuit {
         evaluationOrder.add(gate);
     }
     
-    private void printTableBorder(int[] columnWidths) { // OK
+    private String[] createColumnHeaders(List<LogicInput> inputs, List<Gate> evaluationOrder) {
+        String[] headers = new String[inputs.size() + evaluationOrder.size()];
+        
+        int columnIndex = 0;
+        
+        for (LogicInput input : inputs) {
+            headers[columnIndex] = input.getName();
+            columnIndex++;
+        }
+        
+        for (Gate gate : evaluationOrder) {
+            headers[columnIndex] = gate.getExpression();
+            columnIndex++;
+        }
+        
+        return headers;
+    }
+    
+    private String[] createRowValues(int row, List<LogicInput> inputs, List<Gate> evaluationOrder) {
+        String[] rowValues = new String[inputs.size() + evaluationOrder.size()];
+        
+        setInputValues(row, inputs, rowValues);
+        setGateValues(inputs.size(), evaluationOrder, rowValues);
+        
+        return rowValues;
+    }
+    
+    /*  
+     *  EXAMPLE: 3 INPUTS (A, B, C):
+     *  
+     *     ROW | A  B  C
+     *    -----+---------
+     *      0  | 0  0  0
+     *      1  | 0  0  1
+     *      2  | 0  1  0
+     *      3  | 0  1  1
+     *      4  | 1  0  0
+     *      5  | 1  0  1  <-  [5] EXAMPLE ROW
+     *      6  | 1  1  0
+     *      7  | 1  1  1
+     *    
+     *    'A' CHANGES EVERY 4 ROWS
+     *    'B' CHANGES EVERY 2 ROWS
+     *    'C' CHANGES EVERY 1 ROW
+     *  
+     *  ROW 5:
+     *    A -> groupSize = 4 -> (5 / 4) % 2 = 1 % 2 = 1
+     *    B -> groupSize = 2 -> (5 / 2) % 2 = 2 % 2 = 0
+     *    C -> groupSize = 1 -> (5 / 1) % 2 = 5 % 2 = 1
+     *  
+     *  RESULT: A = 1, B = 0, C = 1
+     */ 
+    private void setInputValues(int row, List<LogicInput> inputs, String[] rowValues) {
+        int inputCount = inputs.size();
+        
+        for (int i = 0; i < inputCount; i++) {
+            int exponent = inputCount - i - 1;
+            int groupSize = (int) Math.pow(2, exponent);
+            
+            boolean inputValue = (row / groupSize) % 2 == 1;
+            
+            inputs.get(i).setValue(inputValue);
+            rowValues[i] = inputValue ? "1" : "0";
+        }
+    }
+    
+    private void setGateValues(int inputCount, List<Gate> evaluationOrder, String[] rowValues) {
+        for (int i = 0; i < evaluationOrder.size(); i++) {
+            int columnIndex = inputCount + i;
+            
+            rowValues[columnIndex] = evaluationOrder.get(i).evaluate() ? "1" : "0";
+        }
+    }
+    
+    private boolean[] saveInputValues(List<LogicInput> inputs) {
+        boolean[] originalValues = new boolean[inputs.size()];
+        
+        for (int i = 0; i < inputs.size(); i++) {
+            originalValues[i] = inputs.get(i).getValue();
+        }
+        
+        return originalValues;
+    }
+    
+    private void restoreInputValues(List<LogicInput> inputs, boolean[] originalValues) {
+        for (int i = 0; i < inputs.size(); i++) {
+            inputs.get(i).setValue(originalValues[i]);
+        }
+    }
+    
+    // TRUTH TABLE - CONSOLE
+    
+    public void showTruthTable() {
+        System.out.println("< Circuito: " + this.name + " >\n");
+        
+        for (Gate gate : gates) {
+            printTable(gate);
+        }
+    }
+    
+    public void showTruthTable(Gate outputGate) {
+        System.out.println("< Circuito: " + this.name + " >\n");
+        
+        printTable(outputGate);
+    }
+    
+    private void printTable(Gate outputGate) {
+        String[][] table = getTruthTable(outputGate);
+        
+        if (table.length == 0) return;
+        
+        int[] columnWidths = getColumnWidths(table);
+        
+        System.out.println("# Tabla de Verdad: " + outputGate.getName() + "\n");
+        
+        printTableBorder(columnWidths);
+        printTableRow(table[0], columnWidths);
+        printTableBorder(columnWidths);
+        
+        for (int row = 1; row < table.length; row++) {
+            printTableRow(table[row], columnWidths);
+        }
+        
+        printTableBorder(columnWidths);
+        
+        System.out.println();
+    }
+    
+    private int[] getColumnWidths(String[][] table) {
+        int[] columnWidths = new int[table[0].length];
+        
+        for (String[] row : table) {
+            for (int i = 0; i < row.length; i++) {
+                columnWidths[i] = Math.max(columnWidths[i], row[i].length());
+            }
+        }
+        
+        return columnWidths;
+    }
+    
+    private void printTableBorder(int[] columnWidths) {
         StringBuilder border = new StringBuilder();
         
         for (int width : columnWidths) {
@@ -228,7 +278,7 @@ public class Circuit {
         System.out.println(border);
     }
     
-    private void printTableRow(String[] values, int[] columnWidths) { // OK
+    private void printTableRow(String[] values, int[] columnWidths) {
         StringBuilder row = new StringBuilder();
         
         for (int i = 0; i < values.length; i++) {
@@ -237,10 +287,10 @@ public class Circuit {
             int rightPadding = remainingPadding - leftPadding;
             
             row.append("| ")
-                    .append(" ".repeat(leftPadding))
-                    .append(values[i])
-                    .append(" ".repeat(rightPadding))
-                    .append(" ");
+               .append(" ".repeat(leftPadding))
+               .append(values[i])
+               .append(" ".repeat(rightPadding))
+               .append(" ");
         }
         
         row.append('|');
