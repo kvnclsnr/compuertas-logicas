@@ -4,9 +4,11 @@ import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 
 public class NandGate extends LogicGateIcon {
+    private static int counter = 1;
     
     public NandGate(int size) {
         super(size);
+        this.engineGate = new com.engine.gates.NandGate("NAND_" + (counter++));
     }
     
     public NandGate() {
@@ -15,7 +17,6 @@ public class NandGate extends LogicGateIcon {
     
     @Override
     protected void drawGate(Graphics2D g2d) {
-        
         Path2D.Double paths = new Path2D.Double();
         
         // OUTPUT
@@ -32,10 +33,8 @@ public class NandGate extends LogicGateIcon {
         
         // GATE
         paths.moveTo(5, 5);
-        
         paths.curveTo(5, 5, 15, 5, 15, 12);
         paths.curveTo(15, 12, 15, 19, 5, 19);
-        
         paths.lineTo(5, 5);
         
         g2d.draw(paths);

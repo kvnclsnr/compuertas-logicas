@@ -4,9 +4,11 @@ import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 
 public class OrGate extends LogicGateIcon {
+    private static int counter = 1;
     
     public OrGate(int size) {
         super(size);
+        this.engineGate = new com.engine.gates.OrGate("OR_" + (counter++));
     }
     
     public OrGate() {
@@ -15,7 +17,6 @@ public class OrGate extends LogicGateIcon {
     
     @Override
     protected void drawGate(Graphics2D g2d) {
-        
         Path2D.Double paths = new Path2D.Double();
         
         // OUTPUT
@@ -32,11 +33,9 @@ public class OrGate extends LogicGateIcon {
         
         // GATE
         paths.moveTo(6, 5);
-        
-        paths.curveTo(6, 5, 15, 6, 18, 12);
-        paths.curveTo(18, 12, 15, 18, 6, 19);
-        
-        paths.curveTo(6, 19, 10, 12, 6, 5);
+        paths.curveTo(6, 5, 12, 5, 18, 12);
+        paths.curveTo(18, 12, 12, 19, 6, 19);
+        paths.curveTo(6, 19, 9, 12, 6, 5);
         
         g2d.draw(paths);
     }

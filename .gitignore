@@ -1,0 +1,13 @@
+# Compilación
+*.class
+build/
+dist/
+
+# NetBeans
+nbproject/private/
+
+# Editores
+.vscode/
+.idea/
+*.iml
+.DS_Store

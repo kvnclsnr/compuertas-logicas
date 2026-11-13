@@ -4,9 +4,11 @@ import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 
 public class XnorGate extends LogicGateIcon {
+    private static int counter = 1;
     
     public XnorGate(int size) {
         super(size);
+        this.engineGate = new com.engine.gates.XnorGate("XNOR_" + (counter++));
     }
     
     public XnorGate() {
@@ -15,7 +17,6 @@ public class XnorGate extends LogicGateIcon {
     
     @Override
     protected void drawGate(Graphics2D g2d) {
-        
         Path2D.Double paths = new Path2D.Double();
         
         // OUTPUT
@@ -32,14 +33,13 @@ public class XnorGate extends LogicGateIcon {
         
         // GATE
         paths.moveTo(5, 5);
+        paths.curveTo(5, 5, 11, 5, 17, 12);
+        paths.curveTo(17, 12, 11, 19, 5, 19);
+        paths.curveTo(5, 19, 8, 12, 5, 5);
         
-        paths.curveTo(5, 5, 14, 6, 16, 12);
-        paths.curveTo(16, 12, 14, 18, 5, 19);
-        
-        paths.curveTo(5, 19, 9, 12, 5, 5);
-        
-        paths.moveTo(3, 19);
-        paths.curveTo(3, 19, 7, 12, 3, 5);
+        // EXTRA CURVE
+        paths.moveTo(3, 5);
+        paths.curveTo(3, 5, 6, 12, 3, 19);
         
         g2d.draw(paths);
         
