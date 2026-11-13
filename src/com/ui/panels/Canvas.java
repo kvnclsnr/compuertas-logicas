@@ -1,5 +1,6 @@
 package com.ui.panels;
 
+import com.ui.gates.SwitchIcon;
 import com.ui.events.GateDragHandler;
 import com.ui.gates.AndGate;
 import com.ui.gates.NandGate;
@@ -12,6 +13,7 @@ import com.ui.styles.Palette;
 import com.ui.styles.Styles;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
+
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.TransferHandler;
@@ -95,6 +97,8 @@ public class Canvas extends JPanel {
                 return new XorGate(ICON_SIZE);
             case "XNOR":
                 return new XnorGate(ICON_SIZE);
+            case "INPUT":
+                return new SwitchIcon(ICON_SIZE);
             default:
                 return null;
         }

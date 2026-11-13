@@ -5,6 +5,7 @@ import com.ui.gates.NandGate;
 import com.ui.gates.NorGate;
 import com.ui.gates.NotGate;
 import com.ui.gates.OrGate;
+import com.ui.gates.SwitchIcon;
 import com.ui.gates.XnorGate;
 import com.ui.gates.XorGate;
 import com.ui.styles.Palette;
@@ -26,7 +27,7 @@ import javax.swing.TransferHandler;
 
 public class GatePalette extends JScrollPane {
     private static final String[] GATE_NAMES = {
-        "AND", "OR", "NOT", "NAND", "NOR", "XOR", "XNOR"
+        "AND", "OR", "NOT", "NAND", "NOR", "XOR", "XNOR", "INPUT"
     };
     
     private static final int ICON_SIZE = 64;
@@ -133,6 +134,8 @@ public class GatePalette extends JScrollPane {
     
     private JComponent createIcon(String name) {
         switch (name) {
+            case "INPUT":
+                return new SwitchIcon(ICON_SIZE);
             case "AND":
                 return new AndGate(ICON_SIZE);
             case "OR":

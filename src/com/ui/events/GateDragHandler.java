@@ -8,9 +8,12 @@ import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
+import com.ui.gates.SwitchIcon;
+
 public class GateDragHandler extends MouseAdapter {
     private final JComponent component;
     private Point dragOffset;
+    private boolean hasDragged = false;
     
     public GateDragHandler(JComponent component) {
         if (component == null) {
@@ -29,6 +32,7 @@ public class GateDragHandler extends MouseAdapter {
         }
         
         dragOffset = event.getPoint();
+        hasDragged = false;
         component.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
     }
     
@@ -38,6 +42,10 @@ public class GateDragHandler extends MouseAdapter {
             return;
         }
         
+        if (event.getPoint().distance(dragOffset) > 3){
+            hasDragged = true;
+        }
+
         Component parent = component.getParent();
         if (parent == null) {
             return;
@@ -51,5 +59,10 @@ public class GateDragHandler extends MouseAdapter {
     public void mouseReleased(MouseEvent event) {
         dragOffset = null;
         component.setCursor(Cursor.getDefaultCursor());
+
+        // Si soltó el botón SIN haber arrastrado, fue un CLIC
+        if (!hasDragged && component instanceof SwitchIcon) {
+            ((SwitchIcon) component).toggle();
+        }
     }
 }
