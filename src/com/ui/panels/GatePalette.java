@@ -1,13 +1,13 @@
 package com.ui.panels;
 
-import com.ui.gates.AndGate;
-import com.ui.gates.NandGate;
-import com.ui.gates.NorGate;
-import com.ui.gates.NotGate;
-import com.ui.gates.OrGate;
-import com.ui.gates.SwitchIcon;
-import com.ui.gates.XnorGate;
-import com.ui.gates.XorGate;
+import com.ui.icons.And;
+import com.ui.icons.Nand;
+import com.ui.icons.Nor;
+import com.ui.icons.Not;
+import com.ui.icons.Or;
+import com.ui.icons.Switch;
+import com.ui.icons.Xnor;
+import com.ui.icons.Xor;
 import com.ui.styles.Palette;
 import com.ui.styles.Styles;
 import java.awt.BorderLayout;
@@ -135,21 +135,21 @@ public class GatePalette extends JScrollPane {
     private JComponent createIcon(String name) {
         switch (name) {
             case "INPUT":
-                return new SwitchIcon(ICON_SIZE);
+                return new Switch(ICON_SIZE);
             case "AND":
-                return new AndGate(ICON_SIZE);
+                return new And(ICON_SIZE);
             case "OR":
-                return new OrGate(ICON_SIZE);
+                return new Or(ICON_SIZE);
             case "NOT":
-                return new NotGate(ICON_SIZE);
+                return new Not(ICON_SIZE);
             case "NAND":
-                return new NandGate(ICON_SIZE);
+                return new Nand(ICON_SIZE);
             case "NOR":
-                return new NorGate(ICON_SIZE);
+                return new Nor(ICON_SIZE);
             case "XOR":
-                return new XorGate(ICON_SIZE);
+                return new Xor(ICON_SIZE);
             case "XNOR":
-                return new XnorGate(ICON_SIZE);
+                return new Xnor(ICON_SIZE);
             default:
                 throw new IllegalArgumentException("Unknown gate: " + name);
         }

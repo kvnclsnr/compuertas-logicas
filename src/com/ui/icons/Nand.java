@@ -1,17 +1,17 @@
-package com.ui.gates;
+package com.ui.icons;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 
-public class NandGate extends LogicGateIcon {
+public class Nand extends LogicGate {
     private static int counter = 1;
     
-    public NandGate(int size) {
+    public Nand(int size) {
         super(size);
         this.engineGate = new com.engine.gates.NandGate("NAND_" + (counter++));
     }
     
-    public NandGate() {
+    public Nand() {
         this(240);
     }    
     
@@ -20,25 +20,25 @@ public class NandGate extends LogicGateIcon {
         Path2D.Double paths = new Path2D.Double();
         
         // OUTPUT
-        paths.moveTo(22, 12);
-        paths.lineTo(19, 12);
+        paths.moveTo(24, 14);
+        paths.lineTo(21, 14);
         
         // A
-        paths.moveTo(2, 9);
-        paths.lineTo(5, 9);
+        paths.moveTo(4, 11);
+        paths.lineTo(7, 11);
         
         // B
-        paths.moveTo(2, 15);
-        paths.lineTo(5, 15);
+        paths.moveTo(4, 17);
+        paths.lineTo(7, 17);
         
         // GATE
-        paths.moveTo(5, 5);
-        paths.curveTo(5, 5, 15, 5, 15, 12);
-        paths.curveTo(15, 12, 15, 19, 5, 19);
-        paths.lineTo(5, 5);
+        paths.moveTo(7, 7);
+        paths.curveTo(7, 7, 17, 7, 17, 14);
+        paths.curveTo(17, 14, 17, 21, 7, 21);
+        paths.lineTo(7, 7);
         
         g2d.draw(paths);
         
-        drawInversionBubble(g2d, 17);
+        drawInversionBubble(g2d, 19);
     }
 }

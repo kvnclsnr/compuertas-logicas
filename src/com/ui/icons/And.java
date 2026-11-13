@@ -1,17 +1,17 @@
-package com.ui.gates;
+package com.ui.icons;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 
-public class AndGate extends LogicGateIcon {
+public class And extends LogicGate {
     private static int counter = 1;
     
-    public AndGate(int size) {
+    public And(int size) {
         super(size);
         this.engineGate = new com.engine.gates.AndGate("AND_" + (counter++));
     }
     
-    public AndGate() {
+    public And() {
         this(240);
     }
     
@@ -20,22 +20,22 @@ public class AndGate extends LogicGateIcon {
         Path2D.Double paths = new Path2D.Double();
         
         // OUTPUT
-        paths.moveTo(22, 12);
-        paths.lineTo(17, 12);
+        paths.moveTo(24, 14);
+        paths.lineTo(19, 14);
         
         // A
-        paths.moveTo(2, 9);
-        paths.lineTo(7, 9);
+        paths.moveTo(4, 11);
+        paths.lineTo(9, 11);
         
         // B
-        paths.moveTo(2, 15);
-        paths.lineTo(7, 15);
+        paths.moveTo(4, 17);
+        paths.lineTo(9, 17);
         
         // GATE
-        paths.moveTo(7, 5);
-        paths.curveTo(7, 5, 17, 5, 17, 12);
-        paths.curveTo(17, 12, 17, 19, 7, 19);
-        paths.lineTo(7, 5);
+        paths.moveTo(9, 7);
+        paths.curveTo(9, 7, 19, 7, 19, 14);
+        paths.curveTo(19, 14, 19, 21, 9, 21);
+        paths.lineTo(9, 7);
         
         g2d.draw(paths);
     }

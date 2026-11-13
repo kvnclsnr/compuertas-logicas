@@ -37,13 +37,13 @@ public class Wire {
     public void draw(Graphics2D g2) {
         Point p1 = source.getLocationOnCanvas();
         Point p2 = target.getLocationOnCanvas();
-
+        
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        Color wireColor = isActive() ? Palette.ACCENT : Palette.MUTED;
+        
+        Color wireColor = isActive() ? Palette.ACCENT : Palette.INK;
         g2.setColor(wireColor);
-        g2.setStroke(new BasicStroke(2.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-
+        g2.setStroke(new BasicStroke(3.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        
         int dx = Math.abs(p2.x - p1.x);
         int controlDist = Math.max(25, dx / 2);
 

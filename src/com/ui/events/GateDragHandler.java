@@ -1,7 +1,7 @@
 package com.ui.events;
 
 import com.ui.circuit.Pin;
-import com.ui.gates.SwitchIcon;
+import com.ui.icons.Switch;
 import com.ui.panels.Canvas;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -101,8 +101,8 @@ public class GateDragHandler extends MouseAdapter {
         dragOffset = null;
         component.setCursor(Cursor.getDefaultCursor());
 
-        if (!hasDragged && component instanceof SwitchIcon) {
-            ((SwitchIcon) component).toggle();
+        if (!hasDragged && component instanceof Switch) {
+            ((Switch) component).toggle();
             if (component.getParent() instanceof Canvas) {
                 ((Canvas) component.getParent()).evaluateCircuit();
             }

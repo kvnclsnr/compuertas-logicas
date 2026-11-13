@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -19,15 +20,15 @@ public class TopBar extends JPanel {
     // TOOLBAR
     private static final String[] MENU_NAMES = { "Archivo", "Editar", "Ver", "Ayuda" };
     private static final String[][] MENU_OPTIONS = {
-        { "Nuevo", "Abrir...", "Guardar" },
+        { "Nuevo", "Abrir", "Guardar" },
         { "Deshacer", "Rehacer" },
         { "Acercar", "Alejar" },
         { "Acerca de" },
     };
     
     // EXPORT
-    // private static final String EXPORT_LABEL = "Exportar";
-    // private static final String[] EXPORT_OPTIONS = { "JSON", "Tabla de verdad" };
+    private static final String EXPORT_LABEL = "Exportar";
+    private static final String[] EXPORT_OPTIONS = { "JSON", "Tabla de verdad" };
     
     public TopBar() {
         UIManager.put("Menu.selectionForeground", Palette.ACCENT);
@@ -45,7 +46,7 @@ public class TopBar extends JPanel {
         setPreferredSize(new Dimension(0, 36));
         
         add(createMenus(), BorderLayout.WEST);
-        // add(createExportArea(), BorderLayout.EAST);
+        add(createExportArea(), BorderLayout.EAST);
     }
     
     // COMPONENTS
@@ -117,5 +118,44 @@ public class TopBar extends JPanel {
         Styles.setBackground(item, Palette.SURFACE);
         
         return item;
+    }
+    
+    private JPanel createExportArea() {
+        JPanel exportArea = new JPanel(new GridBagLayout());
+        Styles.setPadding(exportArea, 0, 8);
+        
+        Styles.setOpaque(exportArea, false);
+        
+        GridBagConstraints constraints = new GridBagConstraints();
+        
+        constraints.anchor = GridBagConstraints.EAST;
+        constraints.weighty = 1;
+        
+        exportArea.add(createExportButton(), constraints);
+        
+        return exportArea;
+    }
+    
+    private JButton createExportButton() {
+        JButton button = new JButton(EXPORT_LABEL);
+        Styles.setPadding(button, 0, 4);
+        
+        Styles.setFont(button, 12f, true);
+        Styles.setForeground(button, Palette.SURFACE);
+        
+        Styles.setOpaque(button, true);
+        Styles.setBackground(button, Palette.ACCENT);
+        
+        Styles.setBorder(button, Palette.ACCENT);
+        
+        Styles.setBorderPainted(button, false);
+        Styles.setFocusPainted(button, false);
+        
+        JPopupMenu popup = new JPopupMenu();
+        configurePopup(popup, EXPORT_OPTIONS);
+        
+        button.addActionListener(event -> popup.show(button, 0, button.getHeight()));
+        
+        return button;
     }
 }

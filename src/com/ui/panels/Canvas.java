@@ -4,15 +4,15 @@ import com.engine.circuit.Circuit;
 import com.ui.circuit.Pin;
 import com.ui.circuit.Wire;
 import com.ui.events.GateDragHandler;
-import com.ui.gates.AndGate;
-import com.ui.gates.LogicGateIcon;
-import com.ui.gates.NandGate;
-import com.ui.gates.NorGate;
-import com.ui.gates.NotGate;
-import com.ui.gates.OrGate;
-import com.ui.gates.SwitchIcon;
-import com.ui.gates.XnorGate;
-import com.ui.gates.XorGate;
+import com.ui.icons.And;
+import com.ui.icons.LogicGate;
+import com.ui.icons.Nand;
+import com.ui.icons.Nor;
+import com.ui.icons.Not;
+import com.ui.icons.Or;
+import com.ui.icons.Switch;
+import com.ui.icons.Xnor;
+import com.ui.icons.Xor;
 import com.ui.styles.Palette;
 import com.ui.styles.Styles;
 import java.awt.BasicStroke;
@@ -46,13 +46,13 @@ public class Canvas extends JPanel {
     }
     
     public Pin findPinAt(JComponent comp, Point pointInComp) {
-        if (comp instanceof SwitchIcon) {
-            Pin out = ((SwitchIcon) comp).getOutputPin();
+        if (comp instanceof Switch) {
+            Pin out = ((Switch) comp).getOutputPin();
             if (out.containsInComponent(pointInComp)) {
                 return out;
             }
-        } else if (comp instanceof LogicGateIcon) {
-            for (Pin pin : ((LogicGateIcon) comp).getPins()) {
+        } else if (comp instanceof LogicGate) {
+            for (Pin pin : ((LogicGate) comp).getPins()) {
                 if (pin.containsInComponent(pointInComp)) {
                     return pin;
                 }
@@ -63,13 +63,13 @@ public class Canvas extends JPanel {
     
     public Pin findPinOnCanvas(Point canvasPoint) {
         for (Component c : getComponents()) {
-            if (c instanceof SwitchIcon) {
-                Pin out = ((SwitchIcon) c).getOutputPin();
+            if (c instanceof Switch) {
+                Pin out = ((Switch) c).getOutputPin();
                 if (out.containsOnCanvas(canvasPoint)) {
                     return out;
                 }
-            } else if (c instanceof LogicGateIcon) {
-                for (Pin pin : ((LogicGateIcon) c).getPins()) {
+            } else if (c instanceof LogicGate) {
+                for (Pin pin : ((LogicGate) c).getPins()) {
                     if (pin.containsOnCanvas(canvasPoint)) {
                         return pin;
                     }
@@ -144,8 +144,8 @@ public class Canvas extends JPanel {
         wires.add(wire);
         
         // Conectar lógicamente en el motor
-        if (inputPin.getOwner() instanceof LogicGateIcon) {
-            ((LogicGateIcon) inputPin.getOwner()).setPinInput(inputPin.getIndex(), outputPin.getLogicSource());
+        if (inputPin.getOwner() instanceof LogicGate) {
+            ((LogicGate) inputPin.getOwner()).setPinInput(inputPin.getIndex(), outputPin.getLogicSource());
         }
         
         evaluateCircuit();
@@ -153,8 +153,8 @@ public class Canvas extends JPanel {
     
     public void disconnectWire(Wire wire) {
         wires.remove(wire);
-        if (wire.getTarget().getOwner() instanceof LogicGateIcon) {
-            ((LogicGateIcon) wire.getTarget().getOwner()).clearPinInput(wire.getTarget().getIndex());
+        if (wire.getTarget().getOwner() instanceof LogicGate) {
+            ((LogicGate) wire.getTarget().getOwner()).clearPinInput(wire.getTarget().getIndex());
         }
         evaluateCircuit();
     }
@@ -181,8 +181,8 @@ public class Canvas extends JPanel {
     public void evaluateCircuit() {
         for (int pass = 0; pass < 5; pass++) {
             for (Component c : getComponents()) {
-                if (c instanceof LogicGateIcon) {
-                    ((LogicGateIcon) c).getOutputValue();
+                if (c instanceof LogicGate) {
+                    ((LogicGate) c).getOutputValue();
                 }
             }
         }
@@ -197,7 +197,7 @@ public class Canvas extends JPanel {
     
     private void addGate(String name, JComponent icon, Point location) {
         icon.setToolTipText(name);
-        Styles.setBorder(icon, Palette.ACCENT);
+        // Styles.setBorder(icon, Palette.ACCENT);
         
         icon.setBounds(
             Math.max(0, location.x - ICON_SIZE / 2),
@@ -208,8 +208,8 @@ public class Canvas extends JPanel {
         
         new GateDragHandler(icon);
         
-        if (icon instanceof LogicGateIcon) {
-            circuit.addGate(((LogicGateIcon) icon).getEngineGate());
+        if (icon instanceof LogicGate) {
+            circuit.addGate(((LogicGate) icon).getEngineGate());
         }
         
         add(icon);
@@ -251,21 +251,21 @@ public class Canvas extends JPanel {
     private JComponent createGateIcon(String name) {
         switch (name) {
             case "INPUT":
-                return new SwitchIcon(ICON_SIZE);
+                return new Switch(ICON_SIZE);
             case "AND":
-                return new AndGate(ICON_SIZE);
+                return new And(ICON_SIZE);
             case "NAND":
-                return new NandGate(ICON_SIZE);
+                return new Nand(ICON_SIZE);
             case "OR":
-                return new OrGate(ICON_SIZE);
+                return new Or(ICON_SIZE);
             case "NOR":
-                return new NorGate(ICON_SIZE);
+                return new Nor(ICON_SIZE);
             case "NOT":
-                return new NotGate(ICON_SIZE);
+                return new Not(ICON_SIZE);
             case "XOR":
-                return new XorGate(ICON_SIZE);
+                return new Xor(ICON_SIZE);
             case "XNOR":
-                return new XnorGate(ICON_SIZE);
+                return new Xnor(ICON_SIZE);
             default:
                 return null;
         }

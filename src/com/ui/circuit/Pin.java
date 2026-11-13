@@ -1,8 +1,9 @@
 package com.ui.circuit;
 
 import com.engine.LogicSource;
-import com.ui.gates.LogicGateIcon;
-import com.ui.gates.SwitchIcon;
+import com.ui.icons.LogicGate;
+import com.ui.icons.Switch;
+
 import java.awt.Point;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
@@ -70,20 +71,20 @@ public class Pin {
 
     public boolean getValue() {
         if (type == Type.OUTPUT) {
-            if (owner instanceof SwitchIcon) {
-                return ((SwitchIcon) owner).isOn();
-            } else if (owner instanceof LogicGateIcon) {
-                return ((LogicGateIcon) owner).getOutputValue();
+            if (owner instanceof Switch) {
+                return ((Switch) owner).isOn();
+            } else if (owner instanceof LogicGate) {
+                return ((LogicGate) owner).getOutputValue();
             }
         }
         return false;
     }
 
     public LogicSource getLogicSource() {
-        if (owner instanceof SwitchIcon) {
-            return ((SwitchIcon) owner).getLogicInput();
-        } else if (owner instanceof LogicGateIcon) {
-            return ((LogicGateIcon) owner).getEngineGate();
+        if (owner instanceof Switch) {
+            return ((Switch) owner).getLogicInput();
+        } else if (owner instanceof LogicGate) {
+            return ((LogicGate) owner).getEngineGate();
         }
         return null;
     }

@@ -31,5 +31,7 @@ public class App {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+        
+        window.setTitle("Compuertas Lógicas");
     }
 }
