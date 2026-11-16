@@ -19,6 +19,8 @@ public class Workspace extends JPanel {
         GatePalette gatePalette = new GatePalette();
         
         Canvas canvas = new Canvas();
+        canvas.setDeleteZone(gatePalette);
+        
         SidePanel sidePanel = new SidePanel(canvas);
         
         canvas.setMinimumSize(new Dimension(256, 0));

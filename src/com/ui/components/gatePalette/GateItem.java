@@ -22,7 +22,7 @@ public class GateItem extends JPanel {
         super(new BorderLayout(16, 0));
         
         Styles.setBackground(this, Palette.SURFACE);
-        Styles.setBorder(this, Palette.ACCENT);
+        Styles.setBorder(this, Palette.LINE);
         Styles.setPadding(this, 0, 16);
         
         setPreferredSize(new Dimension(Integer.MAX_VALUE, ROW_HEIGHT));

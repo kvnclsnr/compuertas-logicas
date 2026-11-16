@@ -90,14 +90,6 @@ public class Switch extends JPanel {
             (int) PIN_Y
         );
         
-        g2d.setColor(Palette.SURFACE);
-        g2d.fill(new Ellipse2D.Double(
-            centerX - outerRadius,
-            centerY - outerRadius,
-            outerDiameter,
-            outerDiameter
-        ));
-        
         g2d.setColor(color);
         g2d.draw(new Ellipse2D.Double(
             centerX - outerRadius,

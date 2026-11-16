@@ -24,6 +24,7 @@ public class CircuitList extends JPanel implements Scrollable {
         
         Styles.setBackground(this, Palette.SURFACE);
         Styles.setForeground(emptyMessage, Palette.MUTED);
+        Styles.setFont(emptyMessage, 14, false);
     }
     
     // MUESTRA UNA SECCIÓN POR CADA TABLA, O UN MENSAJE SI TODAVÍA NO HAY CIRCUITOS

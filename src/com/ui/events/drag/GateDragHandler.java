@@ -108,6 +108,17 @@ public class GateDragHandler extends MouseAdapter {
         dragOffset = null;
         component.setCursor(Cursor.getDefaultCursor());
         
+        // CAMBIO DESDE AQUÍ: SI SE SOLTÓ SOBRE LA PALETA SE BORRA; SI SE SOLTÓ FUERA DEL LIENZO SE VUELVE A METER
+        if (hasDragged && component.getParent() instanceof Canvas canvas) {
+            if (canvas.isOverDeleteZone(event.getLocationOnScreen())) {
+                canvas.removeGate(component);
+                return;
+            }
+            
+            canvas.keepInside(component);
+        }
+        // CAMBIO HASTA AQUÍ
+        
         // SI SE HIZO CLIC EN UN INTERRUPTOR, CAMBIA SU ESTADO Y VUELVE A EVALUAR EL CIRCUITO
         if (!hasDragged && component instanceof Switch) {
             ((Switch) component).toggle();

@@ -16,6 +16,7 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ public class Canvas extends JPanel {
     
     private final CircuitManager circuits = new CircuitManager();
     private CircuitChangeListener circuitChangeListener = null;
+    private Component deleteZone = null;
     
     public Canvas() {
         super(null);
@@ -185,16 +187,21 @@ public class Canvas extends JPanel {
     public void disconnectPin(Pin pin) {
         if (pin.getType() == Pin.Type.INPUT) {
             Wire wire = findWireConnectedToInput(pin);
+            
             if (wire != null) {
                 disconnectWire(wire);
             }
-        } else {
+        }
+        
+        else {
             List<Wire> toRemove = new ArrayList<>();
+            
             for (Wire w : wires) {
                 if (w.getSource().getOwner() == pin.getOwner()) {
                     toRemove.add(w);
                 }
             }
+            
             for (Wire w : toRemove) {
                 disconnectWire(w);
             }
@@ -224,7 +231,6 @@ public class Canvas extends JPanel {
     
     // GATES
     
-    // AUN NO <-- ...
     public void removeGate(JComponent gate) {
         for (Wire wire : new ArrayList<>(wires)) {
             if (wire.isConnectedTo(gate)) {
@@ -247,6 +253,38 @@ public class Canvas extends JPanel {
         notifyCircuitChange();
     }
     
+    // CAMBIO DESDE AQUÍ: BORRAR COMPUERTAS ARRASTRÁNDOLAS A LA PALETA
+    
+    // GUARDA EL COMPONENTE SOBRE EL QUE SE SUELTA UNA COMPUERTA PARA BORRARLA
+    public void setDeleteZone(Component zone) {
+        deleteZone = zone;
+    }
+    
+    // DICE SI UN PUNTO DE LA PANTALLA ESTÁ SOBRE LA ZONA DE BORRADO
+    public boolean isOverDeleteZone(Point screenPoint) {
+        if (deleteZone == null || !deleteZone.isShowing()) {
+            return false;
+        }
+        
+        Rectangle zoneBounds = new Rectangle(deleteZone.getLocationOnScreen(), deleteZone.getSize());
+        
+        return zoneBounds.contains(screenPoint);
+    }
+    
+    // SI LA COMPUERTA QUEDÓ FUERA DEL LIENZO, LA VUELVE A METER PARA QUE NO SE PIERDA
+    public void keepInside(JComponent gate) {
+        int maxX = Math.max(0, getWidth() - gate.getWidth());
+        int maxY = Math.max(0, getHeight() - gate.getHeight());
+        
+        int x = Math.min(Math.max(0, gate.getX()), maxX);
+        int y = Math.min(Math.max(0, gate.getY()), maxY);
+        
+        gate.setLocation(x, y);
+        repaint();
+    }
+    
+    // CAMBIO HASTA AQUÍ
+    
     // Lo llama GateDropHandler; devuelve false si el nombre no es una compuerta conocida
     public boolean addGate(String name, Point location) {
         JComponent icon = GateIconFactory.create(name, ICON_SIZE);
@@ -255,7 +293,6 @@ public class Canvas extends JPanel {
             return false;
         }
         
-        icon.setToolTipText(name);
         // Styles.setBorder(icon, Palette.ACCENT);
         
         icon.setBounds(
@@ -268,7 +305,12 @@ public class Canvas extends JPanel {
         new GateDragHandler(icon);
         
         if (icon instanceof LogicGate logicGate) {
+            icon.setToolTipText(logicGate.getEngineGate().getName());
             circuits.addGate(logicGate.getEngineGate());
+        }
+        
+        else if (icon instanceof Switch switchIcon) {
+            icon.setToolTipText(switchIcon.getLogicInput().getName());
         }
         
         add(icon);

@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 public class SidePanel extends JPanel {
     private static final int PANEL_WIDTH = 360;
     private static final int PANEL_PADDING = 12;
-    private static final int TITLE_GAP = 12;
+    private static final int TITLE_GAP = 8;
     
     // CREA EL PANEL LATERAL CON SU TÍTULO ARRIBA Y LAS TABLAS DEBAJO
     public SidePanel(Canvas canvas) {
@@ -30,7 +30,7 @@ public class SidePanel extends JPanel {
     private JLabel createTitle() {
         JLabel title = new JLabel("Tabla de verdad");
         
-        Styles.setFont(title, 16f, true);
+        Styles.setFont(title, 16, true);
         Styles.setForeground(title, Palette.INK);
         
         return title;

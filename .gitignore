@@ -11,3 +11,8 @@ nbproject/private/
 .idea/
 *.iml
 .DS_Store
+
+# Scripts
+script.cpp
+script
+*.txt

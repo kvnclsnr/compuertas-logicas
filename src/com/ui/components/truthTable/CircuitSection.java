@@ -6,7 +6,7 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
 public class CircuitSection extends JPanel {
-    private static final int TITLE_GAP = 6;
+    private static final int TITLE_GAP = 4;
     
     // CREA LA SECCIÓN DE UN CIRCUITO: SU TÍTULO FIJO ARRIBA Y SU TABLA CON SCROLL DEBAJO
     public CircuitSection(String[][] truthTable, int circuitNumber) {
