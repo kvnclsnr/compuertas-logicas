@@ -4,11 +4,11 @@ import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 
 public class Xnor extends LogicGate {
-    private static int counter = 1;
+    private static int counter = 0;
     
     public Xnor(int size) {
         super(size);
-        this.engineGate = new com.engine.gates.XnorGate("XNOR_" + (counter++));
+        this.engineGate = new com.engine.gates.XnorGate("XNOR-" + (counter++));
     }
     
     public Xnor() {

@@ -1,10 +1,11 @@
 package com.ui.icons;
 
 import com.engine.LogicInput;
-import com.ui.circuit.Pin;
-import com.ui.panels.Canvas;
+import com.ui.circuit.pin.Pin;
+import com.ui.layouts.canvas.Canvas;
 import com.ui.styles.Palette;
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -22,14 +23,16 @@ public class Switch extends JPanel {
     
     private final int iconSize;
     private final LogicInput logicInput;
-    private static int counter = 1;
     
+    private static int counter = 0;
+    
+    // CREA EL INTERRUPTOR Y SU ENTRADA LÓGICA
     public Switch(int size) {
         if (size <= 0) {
             size = 240;
         }
         this.iconSize = size;
-        this.logicInput = new LogicInput("__inp-" + (counter++) + "__", false);
+        this.logicInput = new LogicInput("IN-" + (counter++), false);
         
         Dimension preferredSize = new Dimension(size, size);
         setPreferredSize(preferredSize);
@@ -37,19 +40,23 @@ public class Switch extends JPanel {
         setOpaque(false);
     }
     
+    // CAMBIA EL ESTADO DE LA ENTRADA Y ACTUALIZA EL DIBUJO
     public void toggle() {
         logicInput.setValue(!logicInput.getValue());
         repaint();
     }
     
+    // INDICA SI EL INTERRUPTOR ESTÁ ENCENDIDO
     public boolean isOn() {
         return logicInput.getValue();
     }
     
+    // DEVUELVE LA ENTRADA LÓGICA DEL INTERRUPTOR
     public LogicInput getLogicInput() {
         return logicInput;
     }
     
+    // CALCULA LA POSICIÓN DEL PIN DE SALIDA
     public Pin getOutputPin() {
         int width = getWidth() > 0 ? getWidth() : iconSize;
         int height = getHeight() > 0 ? getHeight() : iconSize;
@@ -66,13 +73,15 @@ public class Switch extends JPanel {
         return new Pin(this, Pin.Type.OUTPUT, x, y, 0);
     }
     
+    // DIBUJA EL CUERPO Y LA CONEXIÓN DEL INTERRUPTOR
     private void drawSwitch(Graphics2D g2d, boolean active) {
         double centerX = VIEW_SIZE * 5.0 / 12;
         double centerY = VIEW_SIZE / 2.0;
         double outerRadius = VIEW_SIZE / 4.0;
         double outerDiameter = outerRadius * 2;
         
-        g2d.setColor(active ? Palette.ACCENT : Palette.INK);
+        Color color = active ? Palette.ACCENT : Palette.INK;
+        g2d.setColor(color);
         g2d.setStroke(new BasicStroke(1.1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g2d.drawLine(
             (int) Math.round(centerX + outerRadius),
@@ -89,7 +98,7 @@ public class Switch extends JPanel {
             outerDiameter
         ));
         
-        g2d.setColor(active ? Palette.ACCENT : Palette.INK);
+        g2d.setColor(color);
         g2d.draw(new Ellipse2D.Double(
             centerX - outerRadius,
             centerY - outerRadius,
@@ -98,7 +107,7 @@ public class Switch extends JPanel {
         ));
         
         double innerRadius = outerRadius * (active ? 0.75 : 0);
-        g2d.setColor(active ? Palette.ACCENT : Palette.INK);
+        g2d.setColor(color);
         g2d.fill(new Ellipse2D.Double(
             centerX - innerRadius,
             centerY - innerRadius,
@@ -107,6 +116,7 @@ public class Switch extends JPanel {
         ));
     }
     
+    // DIBUJA EL TERMINAL DEL PIN DE SALIDA
     private void drawPinTerminal(Graphics2D g2d) {
         double diameter = PIN_RADIUS * 2;
         g2d.setStroke(new BasicStroke(0.5f));
@@ -128,6 +138,7 @@ public class Switch extends JPanel {
         ));
     }
     
+    // DIBUJA EL INTERRUPTOR Y SU TERMINAL CUANDO CORRESPONDE
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

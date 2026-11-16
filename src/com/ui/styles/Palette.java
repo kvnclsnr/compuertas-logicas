@@ -9,4 +9,7 @@ public final class Palette {
     public static final Color ACCENT = new Color(0, 126, 195);
     public static final Color INK = new Color(25, 27, 30);
     public static final Color MUTED = new Color(100, 106, 112);
+    public static final Color ACCENT_TINT = new Color(
+        ACCENT.getRed(), ACCENT.getGreen(), ACCENT.getBlue(), 24
+    );
 }

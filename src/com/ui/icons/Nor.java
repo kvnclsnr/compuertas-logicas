@@ -6,11 +6,11 @@ import java.awt.geom.Path2D;
 import com.engine.gates.NorGate;
 
 public class Nor extends LogicGate {
-    private static int counter = 1;
+    private static int counter = 0;
     
     public Nor(int size) {
         super(size);
-        this.engineGate = new NorGate("NOR_" + (counter++));
+        this.engineGate = new NorGate("NOR-" + (counter++));
     }
     
     public Nor() {

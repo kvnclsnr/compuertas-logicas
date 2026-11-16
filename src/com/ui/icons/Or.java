@@ -4,11 +4,11 @@ import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 
 public class Or extends LogicGate {
-    private static int counter = 1;
+    private static int counter = 0;
     
     public Or(int size) {
         super(size);
-        this.engineGate = new com.engine.gates.OrGate("OR_" + (counter++));
+        this.engineGate = new com.engine.gates.OrGate("OR-" + (counter++));
     }
     
     public Or() {

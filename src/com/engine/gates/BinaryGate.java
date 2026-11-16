@@ -2,8 +2,7 @@ package com.engine.gates;
 
 import com.engine.LogicSource;
 
-public abstract class BinaryGate extends Gate{
-    // estas es una clase abstracta para las compuertas de 2 entradas logicas
+public abstract class BinaryGate extends Gate {
     protected LogicSource inputA;
     protected LogicSource inputB;
     
@@ -14,6 +13,15 @@ public abstract class BinaryGate extends Gate{
         super(name);
         this.inputA = inputA;
         this.inputB = inputB;
+    }
+    
+    @Override
+    public void setInput(int index, LogicSource input) {
+        switch (index) {
+            case 0 -> inputA = input;
+            case 1 -> inputB = input;
+            default -> throw new IndexOutOfBoundsException(index);
+        }
     }
     
     public LogicSource getInputA() {

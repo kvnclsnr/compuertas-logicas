@@ -1,14 +1,18 @@
 package com.ui;
 
-import com.ui.panels.Content;
-import com.ui.panels.TopBar;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Image;
+
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+
+import com.ui.layouts.main.Content;
+import com.ui.layouts.main.TopBar;
 
 public class App {
     public static void main(String[] args) {
@@ -30,8 +34,12 @@ public class App {
         
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setLocationRelativeTo(null);
-        window.setVisible(true);
         
         window.setTitle("Compuertas Lógicas");
+        
+        Image icono = new ImageIcon("src/assets/icon.png").getImage();
+        window.setIconImage(icono);
+        
+        window.setVisible(true);
     }
 }

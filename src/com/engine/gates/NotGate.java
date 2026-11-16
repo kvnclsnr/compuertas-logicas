@@ -14,6 +14,15 @@ public class NotGate extends Gate {
         this.input = input;
     }
     
+    @Override
+    public void setInput(int index, LogicSource input) {
+        if (index != 0) {
+            throw new IndexOutOfBoundsException(index);
+        }
+        
+        this.input = input;
+    }
+    
     public LogicSource getInput() {
         return input;
     }
@@ -30,15 +39,7 @@ public class NotGate extends Gate {
     
     @Override
     public LogicSource[] getInputs() {
-        if (input != null) {
-            // Hay una entrada conectada: creamos un arreglo con ese elemento
-            LogicSource[] entradas = new LogicSource[] { input };
-            return entradas;
-        } else {
-            // No hay nada conectado: creamos un arreglo vacío de 0 elementos
-            LogicSource[] sinEntradas = new LogicSource[0];
-            return sinEntradas;
-        }
+        return new LogicSource[] { input };
     }
     
     @Override

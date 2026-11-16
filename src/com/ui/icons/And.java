@@ -4,11 +4,11 @@ import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 
 public class And extends LogicGate {
-    private static int counter = 1;
+    private static int counter = 0;
     
     public And(int size) {
         super(size);
-        this.engineGate = new com.engine.gates.AndGate("AND_" + (counter++));
+        this.engineGate = new com.engine.gates.AndGate("AND-" + (counter++));
     }
     
     public And() {

@@ -19,6 +19,8 @@ public abstract class Gate implements LogicSource {
     
     public abstract boolean evaluate();
     
+    public abstract void setInput(int index, LogicSource input);
+    
     public abstract LogicSource[] getInputs();
     
     public abstract String getOperator();
@@ -31,8 +33,7 @@ public abstract class Gate implements LogicSource {
             return getOperator() + " " + formatInputExpression(inputs[0]);
         }
         
-        return formatInputExpression(inputs[0]) + " "
-                + getOperator() + " " + formatInputExpression(inputs[1]);
+        return formatInputExpression(inputs[0]) + " " + getOperator() + " " + formatInputExpression(inputs[1]);
     }
     
     @Override
@@ -41,9 +42,11 @@ public abstract class Gate implements LogicSource {
     }
     
     private String formatInputExpression(LogicSource input) {
+        if (input == null) return "0";
+        
         String expression = input.getExpression();
         
-        if (input instanceof Gate gate && gate.getInputs().length > 1) {
+        if (input.isCompoundExpression()) {
             return "(" + expression + ")";
         }
         
@@ -52,8 +55,7 @@ public abstract class Gate implements LogicSource {
     
     @Override
     public boolean isCompoundExpression() {
-        LogicSource[] inputs = getInputs();
-        return inputs != null && inputs.length > 1;
+        return getInputs().length > 1;
     }
     
     //recorre recursivamente las entradas y las añade al orden de evaluacion
@@ -63,6 +65,7 @@ public abstract class Gate implements LogicSource {
         if (visitedGates.contains(this)) {
             return;
         }
+        
         visitedGates.add(this);
         
         LogicSource[] inputs = getInputs();

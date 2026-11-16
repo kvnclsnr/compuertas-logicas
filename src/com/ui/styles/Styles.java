@@ -12,7 +12,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 public final class Styles {
-
+    
     public static void setBorder(JComponent component, Border border) {
         component.setBorder(border);
     }

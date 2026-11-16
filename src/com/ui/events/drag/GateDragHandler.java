@@ -1,8 +1,9 @@
-package com.ui.events;
+package com.ui.events.drag;
 
-import com.ui.circuit.Pin;
+import com.ui.circuit.pin.Pin;
 import com.ui.icons.Switch;
-import com.ui.panels.Canvas;
+import com.ui.layouts.canvas.Canvas;
+
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Point;
@@ -11,6 +12,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
+// PERMITE MOVER LAS COMPUERTAS, CONECTAR SUS PINES Y ACCIONAR LOS INTERRUPTORES
 public class GateDragHandler extends MouseAdapter {
     private final JComponent component;
     private Point dragOffset;
@@ -33,13 +35,13 @@ public class GateDragHandler extends MouseAdapter {
             Canvas canvas = (Canvas) component.getParent();
             Pin pin = canvas.findPinAt(component, event.getPoint());
             
-            // Clic derecho en un pin: desconecta inmediatamente el cable
+            // EL CLIC DERECHO SOBRE UN PIN DESCONECTA SU CABLE
             if (SwingUtilities.isRightMouseButton(event) && pin != null) {
                 canvas.disconnectPin(pin);
                 return;
             }
-
-            // Clic izquierdo en un pin: inicia o reubica el cableado
+            
+            // EL CLIC IZQUIERDO SOBRE UN PIN PERMITE CONECTAR O MOVER UN CABLE
             if (SwingUtilities.isLeftMouseButton(event) && pin != null) {
                 isWiring = true;
                 canvas.startWiring(pin);
@@ -50,8 +52,11 @@ public class GateDragHandler extends MouseAdapter {
         if (!SwingUtilities.isLeftMouseButton(event) || component.getParent() == null) {
             return;
         }
-
+        
         isWiring = false;
+        
+        // GUARDA EL PUNTO DE AGARRE PARA QUE LA COMPUERTA NO SALTE AL MOVERLA
+        
         dragOffset = event.getPoint();
         hasDragged = false;
         component.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
@@ -65,17 +70,19 @@ public class GateDragHandler extends MouseAdapter {
                 Point canvasPoint = SwingUtilities.convertPoint(component, event.getPoint(), canvas);
                 canvas.dragWiring(canvasPoint);
             }
+            
             return;
         }
-
+        
         if (dragOffset == null) {
             return;
         }
         
+        // DISTINGUE UN CLIC DE UN ARRASTRE SEGÚN CUÁNTO SE MOVIÓ EL MOUSE
         if (event.getPoint().distance(dragOffset) > 3) {
             hasDragged = true;
         }
-
+        
         Component parent = component.getParent();
         if (parent == null) {
             return;
@@ -97,18 +104,21 @@ public class GateDragHandler extends MouseAdapter {
             }
             return;
         }
-
+        
         dragOffset = null;
         component.setCursor(Cursor.getDefaultCursor());
-
+        
+        // SI SE HIZO CLIC EN UN INTERRUPTOR, CAMBIA SU ESTADO Y VUELVE A EVALUAR EL CIRCUITO
         if (!hasDragged && component instanceof Switch) {
             ((Switch) component).toggle();
+            
             if (component.getParent() instanceof Canvas) {
                 ((Canvas) component.getParent()).evaluateCircuit();
             }
         }
     }
-
+    
+    // MUESTRA UN CURSOR EN FORMA DE CRUZ CUANDO EL MOUSE PASA SOBRE UN PIN
     @Override
     public void mouseMoved(MouseEvent event) {
         if (component.getParent() instanceof Canvas) {

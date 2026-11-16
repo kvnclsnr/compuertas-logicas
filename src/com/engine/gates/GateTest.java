@@ -2,6 +2,7 @@ package com.engine.gates;
 
 import com.engine.LogicInput;
 import com.engine.circuit.Circuit;
+import com.engine.circuit.TruthTablePrinter;
 
 public class GateTest {
     public static void main(String[] args) {
@@ -19,7 +20,7 @@ public class GateTest {
         circuit.addGate(andGate);
         circuit.addGate(outputGate);
         
-        circuit.showTruthTable();
-        circuit.showTruthTable(nandGate);
+        TruthTablePrinter.show(circuit);
+        TruthTablePrinter.show(circuit, nandGate);
     }
 }
