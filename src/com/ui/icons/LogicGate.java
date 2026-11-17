@@ -44,7 +44,7 @@ public abstract class LogicGate extends JPanel {
     
     // INDICA EL VALOR ACTUAL DE LA SALIDA
     public boolean getOutputValue() {
-        return engineGate != null && engineGate.evaluate();
+        return engineGate != null && engineGate.getValue();
     }
     
     // DIBUJA LA FORMA PROPIA DE CADA COMPUERTA

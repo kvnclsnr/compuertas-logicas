@@ -5,17 +5,20 @@ import java.util.Set;
 
 import com.engine.gates.Gate;
 
+// FUENTE DE UNA SEÑAL LOGICA, PUEDE SER UNA ENTRADA O UNA COMPUERTA
 public interface LogicSource {
+    
+    // DEVUELVE EL VALOR ACTUAL DE LA SEÑAL
     boolean getValue();
+    
+    // DEVUELVE LA EXPRESION LOGICA QUE PRODUCE LA SEÑAL
     String getExpression();
     
-    //este metodo recolecta las entradas y el orden de evaluacion
-    //se usa set para no admitir repetidos a la hora de crear la tabla de verdad
-    //se usa Set<gate> visitedGates para recordar qué compuertas ya revisamos y no entrar en un bucle infinito si una compuerta alimenta a varias otras.
-    void collectInputs(Set<LogicInput> primaryInputs, List<Gate> evaluationOrder, Set<Gate> visitedGates);
+    // RECOLECTA LAS ENTRADAS Y EL ORDEN DE EVALUACION SIN REPETIR COMPUERTAS
+    void collectInputs(Set<LogicInput> inputs, List<Gate> evaluationOrder, Set<Gate> visitedGates);
     
-    //este metodo indica si la fuente es una expresion compuesta
-    default boolean isCompoundExpression(){
+    // DICE SI LA EXPRESION NECESITA PARENTESIS AL USARSE DENTRO DE OTRA
+    default boolean isCompoundExpression() {
         return false;
     }
 }

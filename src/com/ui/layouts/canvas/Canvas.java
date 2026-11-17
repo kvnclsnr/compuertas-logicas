@@ -240,7 +240,7 @@ public class Canvas extends JPanel {
         }
         
         if (gate instanceof LogicGate logicGate) {
-            circuits.removeGateByName(logicGate.getEngineGate().getName());
+            circuits.removeGate(logicGate.getEngineGate());
         }
         
         else {
@@ -252,8 +252,6 @@ public class Canvas extends JPanel {
         evaluateCircuit();
         notifyCircuitChange();
     }
-    
-    // CAMBIO DESDE AQUÍ: BORRAR COMPUERTAS ARRASTRÁNDOLAS A LA PALETA
     
     // GUARDA EL COMPONENTE SOBRE EL QUE SE SUELTA UNA COMPUERTA PARA BORRARLA
     public void setDeleteZone(Component zone) {
@@ -282,8 +280,6 @@ public class Canvas extends JPanel {
         gate.setLocation(x, y);
         repaint();
     }
-    
-    // CAMBIO HASTA AQUÍ
     
     // Lo llama GateDropHandler; devuelve false si el nombre no es una compuerta conocida
     public boolean addGate(String name, Point location) {

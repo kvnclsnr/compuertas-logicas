@@ -4,23 +4,25 @@ import com.engine.LogicInput;
 import com.engine.circuit.Circuit;
 import com.engine.circuit.TruthTablePrinter;
 
+// PRUEBA MANUAL QUE IMPRIME LAS TABLAS DE VERDAD DE UN CIRCUITO DE EJEMPLO
 public class GateTest {
+    
+    // ARMA EL CIRCUITO DE EJEMPLO Y LO IMPRIME EN LA CONSOLA
     public static void main(String[] args) {
         LogicInput inputA = new LogicInput("A");
         LogicInput inputB = new LogicInput("B");
         LogicInput inputC = new LogicInput("C");
         LogicInput inputD = new LogicInput("D");
         
-        Circuit circuit = new Circuit("Demostracion de compuertas");
-        
         Gate andGate = GateFactory.createGate(GateFactory.Type.AND, "AND", inputA, inputB);
         Gate nandGate = GateFactory.createGate(GateFactory.Type.NAND, "NAND", inputC, inputD);
         Gate outputGate = GateFactory.createGate(GateFactory.Type.OR, "Output", andGate, nandGate);
         
+        Circuit circuit = new Circuit("Demostracion de compuertas");
         circuit.addGate(andGate);
         circuit.addGate(outputGate);
         
-        TruthTablePrinter.show(circuit);
-        TruthTablePrinter.show(circuit, nandGate);
+        TruthTablePrinter.print(circuit);
+        TruthTablePrinter.print(circuit, nandGate);
     }
 }

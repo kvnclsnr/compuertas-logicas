@@ -2,59 +2,54 @@ package com.engine.gates;
 
 import com.engine.LogicSource;
 
+// BASE DE LAS COMPUERTAS DE DOS ENTRADAS, CADA UNA SOLO DEFINE COMO CALCULA SU RESULTADO
 public abstract class BinaryGate extends Gate {
-    protected LogicSource inputA;
-    protected LogicSource inputB;
+    private static final int INPUT_A_INDEX = 0;
+    private static final int INPUT_B_INDEX = 1;
     
-    public BinaryGate(String name){
+    private LogicSource inputA;
+    private LogicSource inputB;
+    
+    // CREA LA COMPUERTA SIN ENTRADAS CONECTADAS
+    public BinaryGate(String name) {
         this(name, null, null);
     }
+    
+    // CREA LA COMPUERTA CON SUS DOS ENTRADAS
     public BinaryGate(String name, LogicSource inputA, LogicSource inputB) {
         super(name);
         this.inputA = inputA;
         this.inputB = inputB;
     }
     
+    // CALCULA LA SALIDA A PARTIR DE LOS DOS VALORES
+    protected abstract boolean calculate(boolean valueA, boolean valueB);
+    
+    // LEE LAS DOS ENTRADAS Y CALCULA LA SALIDA
+    @Override
+    public boolean getValue() {
+        return calculate(readValue(inputA), readValue(inputB));
+    }
+    
+    // CAMBIA LA ENTRADA A O LA B SEGUN EL INDICE
     @Override
     public void setInput(int index, LogicSource input) {
-        switch (index) {
-            case 0 -> inputA = input;
-            case 1 -> inputB = input;
-            default -> throw new IndexOutOfBoundsException(index);
+        if (index == INPUT_A_INDEX) {
+            inputA = input;
+        }
+        
+        else if (index == INPUT_B_INDEX) {
+            inputB = input;
+        }
+        
+        else {
+            throw new IndexOutOfBoundsException(index);
         }
     }
     
-    public LogicSource getInputA() {
-        return inputA;
-    }
-    
-    public void setInputA(LogicSource inputA) {
-        this.inputA = inputA;
-    }
-    
-    public LogicSource getInputB() {
-        return inputB;
-    }
-    
-    public void setInputB(LogicSource inputB) {
-        this.inputB = inputB;
-    }
-    
-    public void setInputs(LogicSource inputA, LogicSource inputB) {
-        this.inputA = inputA;
-        this.inputB = inputB;
-    }
-    
+    // DEVUELVE LAS DOS ENTRADAS EN ORDEN
     @Override
     public LogicSource[] getInputs() {
         return new LogicSource[] { inputA, inputB };
-    }
-    
-    protected boolean getInputAValue() {
-        return inputA != null && inputA.getValue();
-    }
-    
-    protected boolean getInputBValue() {
-        return inputB != null && inputB.getValue();
     }
 }

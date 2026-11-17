@@ -5,40 +5,47 @@ import java.util.Set;
 
 import com.engine.gates.Gate;
 
+// ENTRADA LOGICA CON NOMBRE Y UN VALOR QUE SE PUEDE CAMBIAR
 public class LogicInput implements LogicSource {
     private final String name;
     private boolean value;
     
+    // CREA LA ENTRADA APAGADA
     public LogicInput(String name) {
-        this(name, false); 
+        this(name, false);
     }
     
+    // CREA LA ENTRADA CON UN VALOR INICIAL
     public LogicInput(String name, boolean value) {
         this.name = name;
         this.value = value;
     }
     
+    // DEVUELVE EL VALOR ACTUAL
     @Override
     public boolean getValue() {
         return value;
     }
     
+    // CAMBIA EL VALOR ACTUAL
+    public void setValue(boolean value) {
+        this.value = value;
+    }
+    
+    // DEVUELVE EL NOMBRE DE LA ENTRADA
+    public String getName() {
+        return name;
+    }
+    
+    // LA EXPRESION DE UNA ENTRADA ES SU NOMBRE
     @Override
     public String getExpression() {
         return name;
     }
     
-    public void setValue(boolean value) {
-        this.value = value;
-    }
-    
-    public String getName() {
-        return name;
-    }
-    
-    //como eta es una entrada logica se agrega a si misma
+    // SE AGREGA A SI MISMA A LAS ENTRADAS RECOLECTADAS
     @Override
-    public void collectInputs(Set<LogicInput> primaryInputs, List<Gate> evaluationOrder, Set<Gate> visitedGates) {
-        primaryInputs.add(this);
+    public void collectInputs(Set<LogicInput> inputs, List<Gate> evaluationOrder, Set<Gate> visitedGates) {
+        inputs.add(this);
     }
 }

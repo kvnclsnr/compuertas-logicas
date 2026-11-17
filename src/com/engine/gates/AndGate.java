@@ -2,22 +2,29 @@ package com.engine.gates;
 
 import com.engine.LogicSource;
 
+// COMPUERTA AND, SALE 1 SOLO SI LAS DOS ENTRADAS SON 1
 public class AndGate extends BinaryGate {
-    public AndGate(String name){
+    private static final String OPERATOR = "AND";
+    
+    // CREA LA COMPUERTA SIN ENTRADAS CONECTADAS
+    public AndGate(String name) {
         super(name);
     }
     
+    // CREA LA COMPUERTA CON SUS DOS ENTRADAS
     public AndGate(String name, LogicSource inputA, LogicSource inputB) {
         super(name, inputA, inputB);
     }
     
+    // APLICA AND A LOS DOS VALORES
     @Override
-    public boolean evaluate() {
-        return getInputAValue() && getInputBValue();
+    protected boolean calculate(boolean valueA, boolean valueB) {
+        return valueA && valueB;
     }
     
+    // DEVUELVE EL NOMBRE DEL OPERADOR
     @Override
     public String getOperator() {
-        return "AND";
+        return OPERATOR;
     }
 }

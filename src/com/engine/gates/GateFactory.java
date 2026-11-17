@@ -2,38 +2,48 @@ package com.engine.gates;
 
 import com.engine.LogicSource;
 
+// CREA COMPUERTAS A PARTIR DE SU TIPO
 public final class GateFactory {
+    private static final int MAX_BINARY_INPUTS = 2;
+    private static final int MAX_NOT_INPUTS = 1;
+    
     public enum Type {
         AND, OR, NOT, NAND, NOR, XOR, XNOR
     }
     
-    public static Gate createGate(Type type, String name, LogicSource ...inputs) {
+    private GateFactory() {
+    }
+    
+    // CREA LA COMPUERTA DEL TIPO PEDIDO CON LAS ENTRADAS QUE SE LE DEN
+    public static Gate createGate(Type type, String name, LogicSource... inputs) {
         if (type == null) {
-            System.out.println("[!] Error: Gate type cannot be null.");
-            return null;
-        }
-        
-        if (inputs == null) {
-            System.out.println("[!] Error: Gate inputs cannot be null.");
-            return null;
+            throw new IllegalArgumentException("Gate type cannot be null");
         }
         
         if (type == Type.NOT) {
-            if (inputs.length > 1) {
-                System.out.println("[!] Error: NOT accepts only one input.");
-                return null;
-            }
-            
-            return new NotGate(name, inputs.length == 0 ? null : inputs[0]);
+            return createNotGate(name, inputs);
         }
         
-        if (inputs.length > 2) {
-            System.out.println("[!] Error: " + type + " accepts up to two inputs.");
-            return null;
+        return createBinaryGate(type, name, inputs);
+    }
+    
+    // CREA UNA COMPUERTA NOT CON CERO O UNA ENTRADA
+    private static Gate createNotGate(String name, LogicSource[] inputs) {
+        if (inputs.length > MAX_NOT_INPUTS) {
+            throw new IllegalArgumentException("NOT accepts only one input");
         }
         
-        LogicSource inputA = inputs.length > 0 ? inputs[0] : null;
-        LogicSource inputB = inputs.length > 1 ? inputs[1] : null;
+        return new NotGate(name, getInputOrNull(inputs, 0));
+    }
+    
+    // CREA UNA COMPUERTA DE DOS ENTRADAS SEGUN SU TIPO
+    private static Gate createBinaryGate(Type type, String name, LogicSource[] inputs) {
+        if (inputs.length > MAX_BINARY_INPUTS) {
+            throw new IllegalArgumentException(type + " accepts up to two inputs");
+        }
+        
+        LogicSource inputA = getInputOrNull(inputs, 0);
+        LogicSource inputB = getInputOrNull(inputs, 1);
         
         switch (type) {
             case AND:
@@ -46,11 +56,13 @@ public final class GateFactory {
                 return new OrGate(name, inputA, inputB);
             case XNOR:
                 return new XnorGate(name, inputA, inputB);
-            case XOR:
-                return new XorGate(name, inputA, inputB);
             default:
-                System.out.println("[!] Error: Unknown gate type: " + type);
-                return null;
+                return new XorGate(name, inputA, inputB);
         }
+    }
+    
+    // DEVUELVE LA ENTRADA EN ESA POSICION, O null SI NO LA DIERON
+    private static LogicSource getInputOrNull(LogicSource[] inputs, int index) {
+        return index < inputs.length ? inputs[index] : null;
     }
 }
