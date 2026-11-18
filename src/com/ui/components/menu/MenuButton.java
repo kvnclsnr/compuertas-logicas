@@ -1,5 +1,6 @@
 package com.ui.components.menu;
 
+import java.awt.Component;
 import javax.swing.BorderFactory;
 import javax.swing.JMenu;
 
@@ -22,5 +23,14 @@ public class MenuButton extends JMenu {
         Styles.setPadding(this, 0, 8);
         
         OptionsPopup.fill(getPopupMenu(), options);
+    }
+    
+    public PopupItem getItem(String name) {
+        for (Component component : getPopupMenu().getComponents()) {
+            if (component instanceof PopupItem item && name.equals(item.getText())) {
+                return item;
+            }
+        }
+        return null;
     }
 }

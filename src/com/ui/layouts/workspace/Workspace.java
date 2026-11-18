@@ -12,21 +12,26 @@ import com.ui.layouts.sidePanel.SidePanel;
 import com.ui.styles.Styles;
 
 public class Workspace extends JPanel {
+    private final GatePalette gatePalette;
+    private final Canvas canvas;
+    private final SidePanel sidePanel;
+    private final JSplitPane workspaceSplit;
+
     // ORGANIZA LA PALETA, EL LIENZO Y EL PANEL LATERAL
     public Workspace() {
         setLayout(new BorderLayout(8, 0));
         
-        GatePalette gatePalette = new GatePalette();
+        gatePalette = new GatePalette();
         
-        Canvas canvas = new Canvas();
+        canvas = new Canvas();
         canvas.setDeleteZone(gatePalette);
         
-        SidePanel sidePanel = new SidePanel(canvas);
+        sidePanel = new SidePanel(canvas);
         
         canvas.setMinimumSize(new Dimension(256, 0));
         sidePanel.setMinimumSize(new Dimension(224, 0));
         
-        JSplitPane workspaceSplit = new JSplitPane(
+        workspaceSplit = new JSplitPane(
             JSplitPane.HORIZONTAL_SPLIT,
             canvas,
             sidePanel
@@ -48,5 +53,21 @@ public class Workspace extends JPanel {
         
         add(gatePalette, BorderLayout.WEST);
         add(workspaceSplit, BorderLayout.CENTER);
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
+    }
+
+    public SidePanel getSidePanel() {
+        return sidePanel;
+    }
+
+    public GatePalette getGatePalette() {
+        return gatePalette;
+    }
+
+    public JSplitPane getWorkspaceSplit() {
+        return workspaceSplit;
     }
 }

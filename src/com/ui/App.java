@@ -13,6 +13,7 @@ import javax.swing.UIManager;
 
 import com.ui.layouts.main.Content;
 import com.ui.layouts.main.TopBar;
+import com.ui.layouts.workspace.Workspace;
 
 public class App {
     public static void main(String[] args) {
@@ -24,8 +25,12 @@ public class App {
         JFrame window = new JFrame();
         JPanel root = new JPanel(new BorderLayout());
         
-        root.add(new TopBar(), BorderLayout.NORTH);
-        root.add(new Content(), BorderLayout.CENTER);
+        Workspace workspace = new Workspace();
+        Content content = new Content(workspace);
+        TopBar topBar = new TopBar(workspace);
+        
+        root.add(topBar, BorderLayout.NORTH);
+        root.add(content, BorderLayout.CENTER);
         
         window.setContentPane(root);
         

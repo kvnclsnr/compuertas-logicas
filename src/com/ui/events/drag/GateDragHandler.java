@@ -16,6 +16,8 @@ import javax.swing.SwingUtilities;
 public class GateDragHandler extends MouseAdapter {
     private final JComponent component;
     private Point dragOffset;
+    private Point initialLocation;
+    private Point panStartPoint;
     private boolean hasDragged = false;
     private boolean isWiring = false;
     
@@ -31,8 +33,14 @@ public class GateDragHandler extends MouseAdapter {
     
     @Override
     public void mousePressed(MouseEvent event) {
-        if (component.getParent() instanceof Canvas) {
-            Canvas canvas = (Canvas) component.getParent();
+        if (component.getParent() instanceof Canvas canvas) {
+            // NAVEGACIÓN CON ESPACIO + CLIC DERECHO
+            if (canvas.isSpacePressed() && SwingUtilities.isRightMouseButton(event)) {
+                panStartPoint = event.getLocationOnScreen();
+                component.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                return;
+            }
+            
             Pin pin = canvas.findPinAt(component, event.getPoint());
             
             // EL CLIC DERECHO SOBRE UN PIN DESCONECTA SU CABLE
@@ -58,15 +66,26 @@ public class GateDragHandler extends MouseAdapter {
         // GUARDA EL PUNTO DE AGARRE PARA QUE LA COMPUERTA NO SALTE AL MOVERLA
         
         dragOffset = event.getPoint();
+        initialLocation = component.getLocation();
         hasDragged = false;
         component.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
     }
     
     @Override
     public void mouseDragged(MouseEvent event) {
+        if (panStartPoint != null && SwingUtilities.isRightMouseButton(event)) {
+            if (component.getParent() instanceof Canvas canvas) {
+                Point current = event.getLocationOnScreen();
+                int dx = current.x - panStartPoint.x;
+                int dy = current.y - panStartPoint.y;
+                panStartPoint = current;
+                canvas.pan(dx, dy);
+            }
+            return;
+        }
+        
         if (isWiring) {
-            if (component.getParent() instanceof Canvas) {
-                Canvas canvas = (Canvas) component.getParent();
+            if (component.getParent() instanceof Canvas canvas) {
                 Point canvasPoint = SwingUtilities.convertPoint(component, event.getPoint(), canvas);
                 canvas.dragWiring(canvasPoint);
             }
@@ -95,10 +114,19 @@ public class GateDragHandler extends MouseAdapter {
     
     @Override
     public void mouseReleased(MouseEvent event) {
+        if (panStartPoint != null) {
+            panStartPoint = null;
+            if (component.getParent() instanceof Canvas canvas && canvas.isSpacePressed()) {
+                component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            } else {
+                component.setCursor(Cursor.getDefaultCursor());
+            }
+            return;
+        }
+        
         if (isWiring) {
             isWiring = false;
-            if (component.getParent() instanceof Canvas) {
-                Canvas canvas = (Canvas) component.getParent();
+            if (component.getParent() instanceof Canvas canvas) {
                 Point canvasPoint = SwingUtilities.convertPoint(component, event.getPoint(), canvas);
                 canvas.finishWiring(canvasPoint);
             }
@@ -115,6 +143,10 @@ public class GateDragHandler extends MouseAdapter {
             }
             
             canvas.keepInside(component);
+            Point finalLocation = component.getLocation();
+            if (initialLocation != null && !initialLocation.equals(finalLocation)) {
+                canvas.recordMove(component, initialLocation, finalLocation);
+            }
         }
         
         // SI SE HIZO CLIC EN UN INTERRUPTOR, CAMBIA SU ESTADO Y VUELVE A EVALUAR EL CIRCUITO
@@ -130,8 +162,11 @@ public class GateDragHandler extends MouseAdapter {
     // MUESTRA UN CURSOR EN FORMA DE CRUZ CUANDO EL MOUSE PASA SOBRE UN PIN
     @Override
     public void mouseMoved(MouseEvent event) {
-        if (component.getParent() instanceof Canvas) {
-            Canvas canvas = (Canvas) component.getParent();
+        if (component.getParent() instanceof Canvas canvas) {
+            if (canvas.isSpacePressed()) {
+                component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                return;
+            }
             Pin pin = canvas.findPinAt(component, event.getPoint());
             if (pin != null) {
                 component.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));

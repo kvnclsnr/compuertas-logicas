@@ -21,11 +21,16 @@ public final class TruthTableBuilder {
     private static final String TRUE_TEXT = "1";
     private static final String FALSE_TEXT = "0";
     private static final String TOO_MANY_INPUTS_MESSAGE = "Demasiadas entradas (máximo " + MAX_INPUTS + ")";
+    private static final String CYCLE_MESSAGE = "Circuito con retroalimentación (no combinacional)";
     
     private TruthTableBuilder() { }
     
     // CREA LA TABLA CON VARIABLES TEMPORALES EN LAS ENTRADAS LIBRES Y DEJA LAS COMPUERTAS COMO ESTABAN
     public static String[][] build(List<Gate> gates) {
+        if (hasCycle(gates)) {
+            return new String[][] { { CYCLE_MESSAGE } };
+        }
+        
         Map<Gate, LogicSource[]> originalInputs = new IdentityHashMap<>();
         
         try {
@@ -39,6 +44,42 @@ public final class TruthTableBuilder {
         finally {
             restoreInputs(originalInputs);
         }
+    }
+    
+    // DETECTA SI UN GRUPO DE COMPUERTAS CONTIENE UN CICLO O BUCLE DE RETROALIMENTACION
+    public static boolean hasCycle(List<Gate> gates) {
+        Set<Gate> visiting = new HashSet<>();
+        Set<Gate> visited = new HashSet<>();
+        
+        for (Gate gate : gates) {
+            if (detectCycle(gate, visiting, visited)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private static boolean detectCycle(Gate gate, Set<Gate> visiting, Set<Gate> visited) {
+        if (visiting.contains(gate)) {
+            return true;
+        }
+        if (visited.contains(gate)) {
+            return false;
+        }
+        
+        visiting.add(gate);
+        
+        for (LogicSource input : gate.getInputs()) {
+            if (input instanceof Gate inputGate) {
+                if (detectCycle(inputGate, visiting, visited)) {
+                    return true;
+                }
+            }
+        }
+        
+        visiting.remove(gate);
+        visited.add(gate);
+        return false;
     }
     
     // PONE UNA VARIABLE EN CADA ENTRADA LIBRE Y GUARDA LAS ENTRADAS ORIGINALES DE CADA COMPUERTA

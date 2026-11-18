@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.engine.LogicSource;
+import com.engine.gates.BulbGate;
 import com.engine.gates.Gate;
 
 // ADMINISTRA LOS CIRCUITOS SEPARADOS, CADA GRUPO DE COMPUERTAS CONECTADAS ES UN CIRCUITO
@@ -43,10 +44,22 @@ public class CircuitManager {
         List<String[][]> tables = new ArrayList<>();
         
         for (Circuit circuit : circuits) {
-            tables.add(circuit.getTruthTable());
+            if (hasLogicGates(circuit)) {
+                tables.add(circuit.getTruthTable());
+            }
         }
         
         return tables;
+    }
+    
+    // VERIFICA SI EL CIRCUITO TIENE AL MENOS UNA COMPUERTA LOGICA REAL (NO SOLO FOCOS)
+    private boolean hasLogicGates(Circuit circuit) {
+        for (Gate gate : circuit.getGates()) {
+            if (!(gate instanceof BulbGate)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     // CREA UN CIRCUITO NUMERADO CON ESAS COMPUERTAS

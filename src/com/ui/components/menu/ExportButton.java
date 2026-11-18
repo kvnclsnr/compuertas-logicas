@@ -1,5 +1,6 @@
 package com.ui.components.menu;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -30,6 +31,19 @@ public class ExportButton extends JButton implements ActionListener {
         Styles.setFocusPainted(this, false);
         
         addActionListener(this);
+    }
+
+    public OptionsPopup getPopup() {
+        return popup;
+    }
+
+    public PopupItem getItem(String name) {
+        for (Component component : popup.getComponents()) {
+            if (component instanceof PopupItem item && name.equals(item.getText())) {
+                return item;
+            }
+        }
+        return null;
     }
     
     // MUESTRA LAS OPCIONES DEBAJO DEL BOTÓN CUANDO SE HACE CLIC

@@ -5,10 +5,10 @@ import com.engine.LogicSource;
 // CREA COMPUERTAS A PARTIR DE SU TIPO
 public final class GateFactory {
     private static final int MAX_BINARY_INPUTS = 2;
-    private static final int MAX_NOT_INPUTS = 1;
+    private static final int MAX_SINGLE_INPUTS = 1;
     
     public enum Type {
-        AND, OR, NOT, NAND, NOR, XOR, XNOR
+        AND, OR, NOT, NAND, NOR, XOR, XNOR, BULB, FOCO
     }
     
     private GateFactory() {
@@ -24,12 +24,25 @@ public final class GateFactory {
             return createNotGate(name, inputs);
         }
         
+        if (type == Type.BULB || type == Type.FOCO) {
+            return createBulbGate(name, inputs);
+        }
+        
         return createBinaryGate(type, name, inputs);
+    }
+    
+    // CREA UN FOCO CON CERO O UNA ENTRADA
+    private static Gate createBulbGate(String name, LogicSource[] inputs) {
+        if (inputs.length > MAX_SINGLE_INPUTS) {
+            throw new IllegalArgumentException("BULB accepts only one input");
+        }
+        
+        return new BulbGate(name, getInputOrNull(inputs, 0));
     }
     
     // CREA UNA COMPUERTA NOT CON CERO O UNA ENTRADA
     private static Gate createNotGate(String name, LogicSource[] inputs) {
-        if (inputs.length > MAX_NOT_INPUTS) {
+        if (inputs.length > MAX_SINGLE_INPUTS) {
             throw new IllegalArgumentException("NOT accepts only one input");
         }
         

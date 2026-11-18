@@ -5,6 +5,7 @@ import com.ui.styles.Palette;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.Objects;
 import javax.swing.JComponent;
 
 public class Wire {
@@ -54,5 +55,18 @@ public class Wire {
         int radius = TERMINAL_SIZE / 2;
         g2.fillOval(start.x - radius, start.y - radius, TERMINAL_SIZE, TERMINAL_SIZE);
         g2.fillOval(end.x - radius, end.y - radius, TERMINAL_SIZE, TERMINAL_SIZE);
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Wire wire = (Wire) o;
+        return Objects.equals(source, wire.source) && Objects.equals(target, wire.target);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(source, target);
     }
 }

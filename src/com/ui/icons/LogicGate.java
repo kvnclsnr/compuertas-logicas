@@ -42,6 +42,15 @@ public abstract class LogicGate extends JPanel {
         return engineGate;
     }
     
+    // ESTABLECE EL IDENTIFICADOR DE LA COMPUERTA
+    public void setGateId(String id) {
+        setName(id);
+        if (engineGate != null) {
+            engineGate.setName(id);
+        }
+        setToolTipText(id);
+    }
+    
     // INDICA EL VALOR ACTUAL DE LA SALIDA
     public boolean getOutputValue() {
         return engineGate != null && engineGate.getValue();
@@ -70,7 +79,7 @@ public abstract class LogicGate extends JPanel {
         int w = getWidth() > 0 ? getWidth() : iconSize;
         int h = getHeight() > 0 ? getHeight() : iconSize;
         
-        double renderedSize = Math.min(iconSize, Math.min(w, h));
+        double renderedSize = Math.min(w, h);
         double scale = renderedSize / VIEW_SIZE;
         
         double offsetX = (w - VIEW_SIZE * scale) / 2.0;
@@ -85,13 +94,20 @@ public abstract class LogicGate extends JPanel {
             ));
         }
         
-        pins.add(createPin(Pin.Type.OUTPUT, 26, 14, 0, offsetX, offsetY, scale));
+        if (hasOutputPin()) {
+            pins.add(createPin(Pin.Type.OUTPUT, 26, 14, 0, offsetX, offsetY, scale));
+        }
         
         return pins;
     }
     
+    // INDICA SI LA COMPUERTA TIENE TERMINAL DE SALIDA
+    protected boolean hasOutputPin() {
+        return true;
+    }
+    
     // DEVUELVE LAS POSICIONES VERTICALES DE LAS ENTRADAS
-    private int[] getInputPinYPositions() {
+    protected int[] getInputPinYPositions() {
         return this instanceof Not ? new int[] { 14 } : new int[] { 11, 17 };
     }
     
@@ -111,7 +127,9 @@ public abstract class LogicGate extends JPanel {
             fillTerminal(g2d, 2, y);
         }
         
-        fillTerminal(g2d, 26, 14);
+        if (hasOutputPin()) {
+            fillTerminal(g2d, 26, 14);
+        }
     }
     
     // RELLENA Y DELIMITA UN TERMINAL
@@ -127,7 +145,7 @@ public abstract class LogicGate extends JPanel {
     
     // DIBUJA LA COMPUERTA Y SUS TERMINALES EN EL COMPONENTE
     @Override
-    protected final void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
         Graphics2D g2d = (Graphics2D) g.create();
@@ -143,7 +161,8 @@ public abstract class LogicGate extends JPanel {
             new BasicStroke(1.1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)
         );
         
-        double renderedSize = Math.min(iconSize, Math.min(getWidth(), getHeight()));
+        double renderedSize = Math.min(getWidth() > 0 ? getWidth() : iconSize,
+                                       getHeight() > 0 ? getHeight() : iconSize);
         
         double scale = renderedSize / VIEW_SIZE;
         

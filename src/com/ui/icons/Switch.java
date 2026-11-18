@@ -46,6 +46,19 @@ public class Switch extends JPanel {
         repaint();
     }
     
+    // ESTABLECE EL ESTADO DE LA ENTRADA DIRECTAMENTE
+    public void setOn(boolean value) {
+        logicInput.setValue(value);
+        repaint();
+    }
+    
+    // ESTABLECE EL IDENTIFICADOR DEL INTERRUPTOR
+    public void setSwitchId(String id) {
+        setName(id);
+        logicInput.setName(id);
+        setToolTipText(id);
+    }
+    
     // INDICA SI EL INTERRUPTOR ESTÁ ENCENDIDO
     public boolean isOn() {
         return logicInput.getValue();
@@ -61,7 +74,7 @@ public class Switch extends JPanel {
         int width = getWidth() > 0 ? getWidth() : iconSize;
         int height = getHeight() > 0 ? getHeight() : iconSize;
         
-        double renderedSize = Math.min(iconSize, Math.min(width, height));
+        double renderedSize = Math.min(width, height);
         double scale = renderedSize / VIEW_SIZE;
         
         double offsetX = (width - VIEW_SIZE * scale) / 2.0;
@@ -143,7 +156,8 @@ public class Switch extends JPanel {
         boolean inCanvas = getParent() instanceof Canvas;
         boolean active = inCanvas && isOn();
         
-        double renderedSize = Math.min(iconSize, Math.min(getWidth(), getHeight()));
+        double renderedSize = Math.min(getWidth() > 0 ? getWidth() : iconSize,
+                                       getHeight() > 0 ? getHeight() : iconSize);
         double scale = renderedSize / VIEW_SIZE;
         double offsetX = (getWidth() - VIEW_SIZE * scale) / 2.0;
         double offsetY = (getHeight() - VIEW_SIZE * scale) / 2.0;

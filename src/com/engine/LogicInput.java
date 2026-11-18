@@ -7,7 +7,7 @@ import com.engine.gates.Gate;
 
 // ENTRADA LOGICA CON NOMBRE Y UN VALOR QUE SE PUEDE CAMBIAR
 public class LogicInput implements LogicSource {
-    private final String name;
+    private String name;
     private boolean value;
     
     // CREA LA ENTRADA APAGADA
@@ -35,6 +35,11 @@ public class LogicInput implements LogicSource {
     // DEVUELVE EL NOMBRE DE LA ENTRADA
     public String getName() {
         return name;
+    }
+    
+    // CAMBIA EL NOMBRE DE LA ENTRADA
+    public void setName(String name) {
+        this.name = name;
     }
     
     // LA EXPRESION DE UNA ENTRADA ES SU NOMBRE

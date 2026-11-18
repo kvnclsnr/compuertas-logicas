@@ -12,7 +12,7 @@ import com.ui.styles.Styles;
 
 public class GatePalette extends JScrollPane {
     private static final String[] GATE_NAMES = {
-        "AND", "OR", "NOT", "NAND", "NOR", "XOR", "XNOR", "INPUT"
+        "AND", "OR", "NOT", "NAND", "NOR", "XOR", "XNOR", "INPUT", "BULB"
     };
     
     private static final int PALETTE_WIDTH = 192;

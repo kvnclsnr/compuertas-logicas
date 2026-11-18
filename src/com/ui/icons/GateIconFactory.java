@@ -22,6 +22,9 @@ public class GateIconFactory {
                 return new Xor(size);
             case "XNOR":
                 return new Xnor(size);
+            case "BULB":
+            case "FOCO":
+                return new Bulb(size);
             default:
                 return null;
         }
