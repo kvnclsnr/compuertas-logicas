@@ -1,38 +1,45 @@
 package com.ui.events.drag;
 
-import com.ui.layouts.canvas.Canvas;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import javax.swing.TransferHandler;
 
-// Recibe el nombre de la compuerta arrastrada desde la paleta y la agrega al canvas
+import com.ui.icons.ElementType;
+import com.ui.layouts.canvas.Canvas;
+
+// RECIBE EL TIPO DE ELEMENTO ARRASTRADO DESDE LA PALETA Y LO AGREGA AL LIENZO
 public class GateDropHandler extends TransferHandler {
     private final Canvas canvas;
     
+    // CREA EL RECEPTOR PARA UN LIENZO
     public GateDropHandler(Canvas canvas) {
         this.canvas = canvas;
     }
     
+    // SOLO ACEPTA SOLTAR TEXTO
     @Override
     public boolean canImport(TransferSupport support) {
         return support.isDrop() && support.isDataFlavorSupported(DataFlavor.stringFlavor);
     }
     
+    // AGREGA EL ELEMENTO EN EL PUNTO DONDE SE SOLTO, SI EL TEXTO NO ES UN TIPO CONOCIDO LO RECHAZA
     @Override
     public boolean importData(TransferSupport support) {
-        if (!canImport(support)) {
-            return false;
-        }
+        if (!canImport(support)) return false;
         
         try {
-            String name = (String) support.getTransferable().getTransferData(DataFlavor.stringFlavor);
+            String text = (String) support.getTransferable().getTransferData(DataFlavor.stringFlavor);
+            ElementType type = ElementType.valueOf(text);
             Point dropPoint = support.getDropLocation().getDropPoint();
             
-            return canvas.addGate(name, dropPoint);
-        } catch (UnsupportedFlavorException | IOException exception) {
-            System.err.println("Could not add the dragged gate: " + exception.getMessage());
+            canvas.addElement(type, dropPoint);
+            
+            return true;
+        }
+        
+        catch (UnsupportedFlavorException | IOException | IllegalArgumentException exception) {
             return false;
         }
     }

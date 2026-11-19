@@ -5,25 +5,22 @@ import javax.swing.BorderFactory;
 import javax.swing.JPopupMenu;
 
 import com.ui.styles.Palette;
-import com.ui.styles.Styles;
 
+// LISTA DE OPCIONES QUE SE ABRE DEBAJO DE UN BOTON
 public class OptionsPopup extends JPopupMenu {
     private static final int POPUP_WIDTH = 224;
     
-    // CREA UN POPUP CON UNA OPCIÓN POR CADA TEXTO DE LA LISTA
-    public OptionsPopup(String[] options) {
-        fill(this, options);
+    // CREA LA LISTA CON UNA OPCION POR CADA ELEMENTO
+    public OptionsPopup(MenuOption[] options) {
+        fillPopup(this, options);
     }
     
-    // DA ESTILO A UN POPUP Y LE AGREGA SUS OPCIONES
-    // ES STATIC PORQUE MENUBUTTON TAMBIÉN LO USA, YA QUE UN JMENU TRAE SU PROPIO POPUP
-    public static void fill(JPopupMenu popup, String[] options) {
-        Styles.setBackground(popup, Palette.SURFACE);
+    // DA ESTILO A UNA LISTA Y LE AGREGA SUS OPCIONES, ES ESTATICO PORQUE UN JMENU TRAE SU PROPIA LISTA
+    public static void fillPopup(JPopupMenu popup, MenuOption[] options) {
+        popup.setBackground(Palette.SURFACE);
+        popup.setBorder(BorderFactory.createLineBorder(Palette.LINE));
         
-        Styles.setBorder(popup, BorderFactory.createEmptyBorder());
-        Styles.setBorder(popup, Palette.LINE);
-        
-        for (String option : options) {
+        for (MenuOption option : options) {
             popup.add(new PopupItem(option));
         }
         

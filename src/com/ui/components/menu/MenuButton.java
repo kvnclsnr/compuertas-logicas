@@ -6,21 +6,25 @@ import javax.swing.JMenu;
 import com.ui.styles.Palette;
 import com.ui.styles.Styles;
 
+// BOTON DE LA BARRA SUPERIOR QUE ABRE UN MENU DE OPCIONES
 public class MenuButton extends JMenu {
+    private static final int VERTICAL_PADDING = 0;
+    private static final int HORIZONTAL_PADDING = 8;
+    private static final float FONT_SIZE = 14f;
     
-    // CREA UN BOTÓN DE LA BARRA CON SU NOMBRE Y LAS OPCIONES QUE SE ABREN AL PULSARLO
-    public MenuButton(String name, String[] options) {
+    // CREA EL BOTON CON SU NOMBRE Y LAS OPCIONES QUE SE ABREN AL PULSARLO
+    public MenuButton(String name, MenuOption[] options) {
         super(name);
         
-        Styles.setFont(this, 14f);
-        Styles.setForeground(this, Palette.INK);
+        Styles.setFont(this, FONT_SIZE);
+        setForeground(Palette.INK);
         
-        Styles.setOpaque(this, true);
-        Styles.setBackground(this, Palette.SURFACE);
+        setOpaque(true);
+        setBackground(Palette.SURFACE);
         
-        Styles.setBorder(this, BorderFactory.createEmptyBorder());
-        Styles.setPadding(this, 0, 8);
+        setBorder(BorderFactory.createEmptyBorder());
+        Styles.setPadding(this, VERTICAL_PADDING, HORIZONTAL_PADDING);
         
-        OptionsPopup.fill(getPopupMenu(), options);
+        OptionsPopup.fillPopup(getPopupMenu(), options);
     }
 }

@@ -1,15 +1,17 @@
 package com.ui.circuit.wire;
 
-import com.ui.circuit.pin.Pin;
-import com.ui.styles.Palette;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import javax.swing.JComponent;
 
+import com.ui.circuit.pin.Pin;
+import com.ui.icons.CircuitElement;
+import com.ui.styles.Palette;
+
+// CABLE QUE LLEVA LA SEÑAL DE UN PIN DE SALIDA A UN PIN DE ENTRADA
 public class Wire {
-    private static final float WIRE_WIDTH = 3.5f;
-    private static final int TERMINAL_SIZE = 6;
+    private static final BasicStroke STROKE = new BasicStroke(3.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    private static final int TERMINAL_RADIUS = 3;
     
     private final Pin source;
     private final Pin target;
@@ -30,29 +32,43 @@ public class Wire {
         return target;
     }
     
-    // DICE SI EL CABLE LLEVA UN 1, ES DECIR, SI SU SALIDA ESTÁ ENCENDIDA
+    // CONECTA LA SEÑAL EN EL ENGINE, LA ENTRADA RECIBE LA SALIDA DE ORIGEN
+    public void attach() {
+        target.getOwner().setInput(target.getIndex(), source.getOwner().getOutputSource());
+    }
+    
+    // DESCONECTA LA SEÑAL EN EL ENGINE, LA ENTRADA QUEDA LIBRE
+    public void detach() {
+        target.getOwner().setInput(target.getIndex(), null);
+    }
+    
+    // DICE SI EL CABLE LLEVA UN 1
     public boolean isActive() {
-        return source.getValue();
+        return source.getOwner().getOutputValue();
     }
     
-    // DICE SI EL CABLE ENTRA O SALE DE ESE COMPONENTE
-    public boolean isConnectedTo(JComponent component) {
-        return source.getOwner() == component || target.getOwner() == component;
+    // DICE SI EL CABLE ENTRA O SALE DE ESE ELEMENTO
+    public boolean isConnectedTo(CircuitElement element) {
+        return source.getOwner() == element || target.getOwner() == element;
     }
     
-    // DIBUJA EL CABLE CON SU CURVA Y UN PUNTO EN CADA EXTREMO
-    public void draw(Graphics2D g2) {
+    // DIBUJA LA CURVA Y UN PUNTO EN CADA EXTREMO
+    public void draw(Graphics2D g2d) {
         Point start = source.getLocationOnCanvas();
         Point end = target.getLocationOnCanvas();
         
-        g2.setColor(isActive() ? Palette.ACCENT : Palette.INK);
-        g2.setStroke(new BasicStroke(WIRE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g2d.setColor(isActive() ? Palette.ACCENT : Palette.INK);
+        g2d.setStroke(STROKE);
         
-        g2.draw(WireCurve.create(start, end));
+        g2d.draw(WireCurve.create(start, end));
+        drawTerminal(g2d, start);
+        drawTerminal(g2d, end);
+    }
+    
+    // DIBUJA UN PUNTO LLENO EN UN EXTREMO DEL CABLE
+    private void drawTerminal(Graphics2D g2d, Point center) {
+        int diameter = TERMINAL_RADIUS * 2;
         
-        // PUNTOS EN LOS EXTREMOS
-        int radius = TERMINAL_SIZE / 2;
-        g2.fillOval(start.x - radius, start.y - radius, TERMINAL_SIZE, TERMINAL_SIZE);
-        g2.fillOval(end.x - radius, end.y - radius, TERMINAL_SIZE, TERMINAL_SIZE);
+        g2d.fillOval(center.x - TERMINAL_RADIUS, center.y - TERMINAL_RADIUS, diameter, diameter);
     }
 }

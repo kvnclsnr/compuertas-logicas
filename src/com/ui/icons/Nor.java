@@ -5,18 +5,22 @@ import java.awt.geom.Path2D;
 
 import com.engine.gates.NorGate;
 
+// DIBUJO DE LA COMPUERTA NOR
 public class Nor extends LogicGate {
     private static int counter = 0;
     
+    // CREA LA COMPUERTA CON SU NOMBRE NUMERADO
     public Nor(int size) {
-        super(size);
+        super(size, ElementType.NOR);
         this.engineGate = new NorGate("NOR-" + (counter++));
     }
     
+    // CREA LA COMPUERTA CON EL TAMAÑO POR DEFECTO
     public Nor() {
-        this(240);
-    }    
+        this(DEFAULT_SIZE);
+    }
     
+    // DIBUJA LAS PATAS, EL CUERPO Y EL CIRCULO DE INVERSION
     @Override
     protected void drawGate(Graphics2D g2d) {
         Path2D.Double paths = new Path2D.Double();

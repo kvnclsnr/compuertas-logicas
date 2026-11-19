@@ -6,19 +6,24 @@ import javax.swing.JMenuItem;
 import com.ui.styles.Palette;
 import com.ui.styles.Styles;
 
+// OPCION DE UNA LISTA DESPLEGABLE
 public class PopupItem extends JMenuItem {
+    private static final int PADDING = 8;
+    private static final float FONT_SIZE = 12f;
     
-    // CREA UNA OPCIÓN DE POPUP CON SU TEXTO Y SU ESTILO
-    public PopupItem(String text) {
-        super(text);
+    // CREA LA OPCION CON SU TEXTO, SU ESTILO Y SU ACCION
+    public PopupItem(MenuOption option) {
+        super(option.label());
         
-        Styles.setBorder(this, BorderFactory.createEmptyBorder());
-        Styles.setPadding(this, 8);
+        setBorder(BorderFactory.createEmptyBorder());
+        Styles.setPadding(this, PADDING);
         
-        Styles.setFont(this, 12f);
-        Styles.setForeground(this, Palette.MUTED);
+        Styles.setFont(this, FONT_SIZE);
+        setForeground(Palette.MUTED);
         
-        Styles.setOpaque(this, true);
-        Styles.setBackground(this, Palette.SURFACE);
+        setOpaque(true);
+        setBackground(Palette.SURFACE);
+        
+        addActionListener(option.action());
     }
 }

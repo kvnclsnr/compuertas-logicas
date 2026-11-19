@@ -1,7 +1,5 @@
 package com.ui.components.truthTable;
 
-import com.ui.styles.Palette;
-import com.ui.styles.Styles;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ComponentAdapter;
@@ -12,31 +10,26 @@ import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 
-// SCROLL PROPIO DE CADA TABLA: SOLO SE DESPLAZA HORIZONTALMENTE, Y SU BARRA QUEDA PEGADA A LA TABLA
+import com.ui.styles.Palette;
+import com.ui.styles.Styles;
+
+// SCROLL PROPIO DE CADA TABLA, SOLO SE DESPLAZA HORIZONTALMENTE Y SU BARRA QUEDA PEGADA A LA TABLA
 public class TableScrollPane extends JScrollPane {
+    private static final int BORDER_WIDTH = 1;
     
-    // CREA EL SCROLL CON LA TABLA ADENTRO; EL ENCABEZADO SE DESPLAZA JUNTO CON ELLA
+    // CREA EL SCROLL CON LA TABLA ADENTRO, EL ENCABEZADO SE DESPLAZA JUNTO CON ELLA
     public TableScrollPane(CircuitTable table) {
         super(table, VERTICAL_SCROLLBAR_NEVER, HORIZONTAL_SCROLLBAR_AS_NEEDED);
         
-        Styles.setBackground(this, Palette.SURFACE);
-        Styles.setBackground(getViewport(), Palette.SURFACE);
-        
-        // LÍNEA ARRIBA E IZQUIERDA; LA DE ABAJO Y LA DERECHA LAS DIBUJAN LAS CELDAS
-        Styles.setBorder(this, 1, 1, 0, 0, Palette.LINE);
+        setBackground(Palette.SURFACE);
+        getViewport().setBackground(Palette.SURFACE);
+        Styles.setBorder(this, BORDER_WIDTH, BORDER_WIDTH, 0, 0, Palette.LINE);
         
         passWheelToParent();
-        
-        // AL CAMBIAR EL ANCHO PUEDE APARECER O DESAPARECER LA BARRA, ASÍ QUE SE RECALCULA EL ALTO
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent event) {
-                revalidateParent();
-            }
-        });
+        revalidateParentOnResize();
     }
     
-    // SI LA BARRA HORIZONTAL HACE FALTA, SU ALTO SE SUMA PARA QUE NO TAPE LA ÚLTIMA FILA
+    // SI LA BARRA HORIZONTAL HACE FALTA SU ALTO SE SUMA PARA QUE NO TAPE LA ULTIMA FILA
     @Override
     public Dimension getPreferredSize() {
         Dimension size = super.getPreferredSize();
@@ -48,23 +41,38 @@ public class TableScrollPane extends JScrollPane {
         return size;
     }
     
-    // UN JSCROLLPANE NO AVISA A QUIEN LO CONTIENE CUANDO REVALIDA, ASÍ QUE SE REVALIDA EL CONTENEDOR
-    // SI NO, LA LISTA NUNCA SE ENTERA DE QUE ESTE SCROLL NECESITA MÁS ALTO PARA SU BARRA
+    // QUITA LA RUEDA DE ESTE SCROLL PARA QUE EL SCROLL VERTICAL DEL PANEL LA RECIBA
+    private void passWheelToParent() {
+        for (MouseWheelListener listener : getMouseWheelListeners()) {
+            removeMouseWheelListener(listener);
+        }
+    }
+    
+    // AL CAMBIAR EL ANCHO PUEDE APARECER O DESAPARECER LA BARRA, ASI QUE SE RECALCULA EL ALTO
+    private void revalidateParentOnResize() {
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent event) {
+                revalidateParent();
+            }
+        });
+    }
+    
+    // UN SCROLL NO AVISA A QUIEN LO CONTIENE CUANDO SE REVALIDA, ASI QUE SE REVALIDA EL CONTENEDOR
     private void revalidateParent() {
         if (getParent() instanceof JComponent parent) {
             parent.revalidate();
         }
     }
     
-    // DICE SI LA TABLA ES MÁS ANCHA QUE EL ESPACIO QUE TENDRÁ EL SCROLL
+    // DICE SI LA TABLA ES MAS ANCHA QUE EL ESPACIO QUE TENDRA EL SCROLL
     private boolean needsHorizontalScroll(int tableWidth) {
         int availableWidth = getAvailableWidth();
         
         return availableWidth > 0 && availableWidth < tableWidth;
     }
     
-    // DEVUELVE EL ANCHO QUE TENDRÁ EL SCROLL, AUNQUE TODAVÍA NO SE HAYA ACOMODADO
-    // SE TOMA DEL PANEL EN EL QUE ESTÁ, QUE YA TIENE ANCHO, PARA NO ESPERAR A QUE EL SCROLL TENGA EL SUYO
+    // DEVUELVE EL ANCHO QUE TENDRA EL SCROLL TOMADO DEL PANEL QUE LO CONTIENE, QUE YA TIENE ANCHO
     private int getAvailableWidth() {
         JViewport viewport = (JViewport) SwingUtilities.getAncestorOfClass(JViewport.class, this);
         
@@ -75,12 +83,5 @@ public class TableScrollPane extends JScrollPane {
         Insets insets = getInsets();
         
         return viewport.getWidth() - insets.left - insets.right;
-    }
-    
-    // QUITA LA RUEDA DE ESTE SCROLL PARA QUE EL SCROLL VERTICAL DEL PANEL LA RECIBA
-    private void passWheelToParent() {
-        for (MouseWheelListener listener : getMouseWheelListeners()) {
-            removeMouseWheelListener(listener);
-        }
     }
 }

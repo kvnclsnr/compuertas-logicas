@@ -3,18 +3,24 @@ package com.ui.icons;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 
+import com.engine.gates.XnorGate;
+
+// DIBUJO DE LA COMPUERTA XNOR
 public class Xnor extends LogicGate {
     private static int counter = 0;
     
+    // CREA LA COMPUERTA CON SU NOMBRE NUMERADO
     public Xnor(int size) {
-        super(size);
-        this.engineGate = new com.engine.gates.XnorGate("XNOR-" + (counter++));
+        super(size, ElementType.XNOR);
+        this.engineGate = new XnorGate("XNOR-" + (counter++));
     }
     
+    // CREA LA COMPUERTA CON EL TAMAÑO POR DEFECTO
     public Xnor() {
-        this(240);
+        this(DEFAULT_SIZE);
     }
     
+    // DIBUJA LAS PATAS, EL CUERPO, LA CURVA EXTRA Y EL CIRCULO DE INVERSION
     @Override
     protected void drawGate(Graphics2D g2d) {
         Path2D.Double paths = new Path2D.Double();

@@ -1,39 +1,34 @@
 package com.ui.events.resize;
 
+import java.awt.Component;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.JSplitPane;
-import com.ui.layouts.canvas.Canvas;
-import com.ui.layouts.sidePanel.SidePanel;
 
-// COLOCA EL DIVISOR UNA SOLA VEZ, CUANDO EL PANEL YA TIENE ANCHO
-// LE DA AL PANEL LATERAL SU ANCHO PREFERIDO SI EL LIENZO PUEDE CONSERVAR SU ANCHO MÍNIMO
+// COLOCA EL DIVISOR UNA SOLA VEZ, CUANDO EL PANEL YA TIENE ANCHO, DANDOLE AL DERECHO SU ANCHO PREFERIDO
 public class DividerStartPositionHandler extends ComponentAdapter {
     private final JSplitPane split;
-    private final Canvas canvas;
-    private final SidePanel sidePanel;
+    private final Component leftPanel;
+    private final Component rightPanel;
     
-    // GUARDA EL PANEL PARTIDO Y LOS DOS PANELES QUE SE REPARTEN EL ANCHO
-    public DividerStartPositionHandler(JSplitPane split, Canvas canvas, SidePanel sidePanel) {
+    // CREA EL MANEJADOR PARA UN PANEL PARTIDO Y SUS DOS LADOS
+    public DividerStartPositionHandler(JSplitPane split, Component leftPanel, Component rightPanel) {
         this.split = split;
-        this.canvas = canvas;
-        this.sidePanel = sidePanel;
+        this.leftPanel = leftPanel;
+        this.rightPanel = rightPanel;
     }
     
-    // FIJA LA POSICIÓN DEL DIVISOR LA PRIMERA VEZ QUE EL PANEL TIENE ANCHO
+    // FIJA LA POSICION DEL DIVISOR LA PRIMERA VEZ QUE EL PANEL TIENE ANCHO, SIN DEJAR EL IZQUIERDO MUY ANGOSTO
     @Override
     public void componentResized(ComponentEvent event) {
         if (split.getWidth() == 0) return;
         
         split.removeComponentListener(this);
         
-        int maxPanelWidth = split.getWidth()
-            - split.getDividerSize()
-            - canvas.getMinimumSize().width;
+        int availableWidth = split.getWidth() - split.getDividerSize();
+        int maxRightWidth = availableWidth - leftPanel.getMinimumSize().width;
+        int rightWidth = Math.min(rightPanel.getPreferredSize().width, maxRightWidth);
         
-        int panelWidth = Math.min(sidePanel.getPreferredSize().width, maxPanelWidth);
-        int canvasWidth = split.getWidth() - split.getDividerSize() - panelWidth;
-        
-        split.setDividerLocation(canvasWidth);
+        split.setDividerLocation(availableWidth - rightWidth);
     }
 }

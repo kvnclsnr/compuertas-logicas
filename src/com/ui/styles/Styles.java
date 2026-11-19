@@ -2,7 +2,6 @@ package com.ui.styles;
 
 import java.awt.Color;
 import java.awt.Font;
-import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.border.Border;
@@ -11,176 +10,102 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
+// AYUDAS PARA PONER BORDES, MARGENES Y FUENTES SIN PERDER LOS QUE EL COMPONENTE YA TIENE
 public final class Styles {
     
-    public static void setBorder(JComponent component, Border border) {
-        component.setBorder(border);
-    }
+    private Styles() { }
     
+    // PONE UN BORDE DE LINEA EN LOS CUATRO LADOS Y CONSERVA EL MARGEN
     public static void setBorder(JComponent component, Color color) {
-        Border currentBorder = component.getBorder();
-        Border lineBorder = BorderFactory.createLineBorder(color);
-        
-        if (currentBorder instanceof CompoundBorder) {
-            CompoundBorder compoundBorder = (CompoundBorder) currentBorder;
-            
-            if (compoundBorder.getOutsideBorder() instanceof LineBorder
-            ||  compoundBorder.getOutsideBorder() instanceof MatteBorder
-            ) {
-                currentBorder = compoundBorder.getInsideBorder();
-            }
-        }
-        
-        else if (currentBorder instanceof LineBorder || currentBorder instanceof MatteBorder) {
-            currentBorder = null;
-        }
-        
-        component.setBorder(currentBorder == null
-            ? lineBorder
-            : BorderFactory.createCompoundBorder(lineBorder, currentBorder)
-        );
+        setOuterBorder(component, BorderFactory.createLineBorder(color));
     }
     
+    // PONE UN BORDE CON UN GROSOR DISTINTO EN CADA LADO Y CONSERVA EL MARGEN
     public static void setBorder(JComponent component, int top, int left, int bottom, int right, Color color) {
-        Border currentBorder = component.getBorder();
-        Border matteBorder = BorderFactory.createMatteBorder(top, left, bottom, right, color);
-        
-        if (currentBorder instanceof CompoundBorder) {
-            CompoundBorder compoundBorder = (CompoundBorder) currentBorder;
-            
-            if (compoundBorder.getOutsideBorder() instanceof LineBorder
-            ||  compoundBorder.getOutsideBorder() instanceof MatteBorder
-            ) {
-                currentBorder = compoundBorder.getInsideBorder();
-            }
-        }
-        
-        else if (currentBorder instanceof LineBorder || currentBorder instanceof MatteBorder) {
-            currentBorder = null;
-        }
-        
-        component.setBorder(currentBorder == null
-            ? matteBorder
-            : BorderFactory.createCompoundBorder(matteBorder, currentBorder)
-        );
+        setOuterBorder(component, BorderFactory.createMatteBorder(top, left, bottom, right, color));
     }
     
-    public static void setBorder(JComponent component, int vertical, int horizontal, Color color) {
-        Border currentBorder = component.getBorder();
-        Border matteBorder = BorderFactory.createMatteBorder(vertical, horizontal, vertical, horizontal, color);
-        
-        if (currentBorder instanceof CompoundBorder) {
-            CompoundBorder compoundBorder = (CompoundBorder) currentBorder;
-            
-            if (compoundBorder.getOutsideBorder() instanceof LineBorder
-            ||  compoundBorder.getOutsideBorder() instanceof MatteBorder
-            ) {
-                currentBorder = compoundBorder.getInsideBorder();
-            }
-        }
-        
-        else if (currentBorder instanceof LineBorder || currentBorder instanceof MatteBorder) {
-            currentBorder = null;
-        }
-        
-        component.setBorder(currentBorder == null
-            ? matteBorder
-            : BorderFactory.createCompoundBorder(matteBorder, currentBorder)
-        );
+    // PONE EL MISMO MARGEN INTERNO EN LOS CUATRO LADOS Y CONSERVA EL BORDE
+    public static void setPadding(JComponent component, int padding) {
+        setPadding(component, padding, padding, padding, padding);
     }
     
-    public static void setPadding(JComponent component, int top, int left, int bottom, int right) {
-        Border currentBorder = component.getBorder();
-        Border padding = BorderFactory.createEmptyBorder(top, left, bottom, right);
-        
-        if (currentBorder instanceof CompoundBorder) {
-            CompoundBorder compoundBorder = (CompoundBorder) currentBorder;
-            
-            if (compoundBorder.getInsideBorder() instanceof EmptyBorder) {
-                currentBorder = compoundBorder.getOutsideBorder();
-            }
-        }
-        
-        else if (currentBorder instanceof EmptyBorder) {
-            currentBorder = null;
-        }
-        
-        component.setBorder(currentBorder == null
-            ? padding
-            : BorderFactory.createCompoundBorder(currentBorder, padding)
-        );
-    }
-    
+    // PONE UN MARGEN VERTICAL Y UN MARGEN HORIZONTAL Y CONSERVA EL BORDE
     public static void setPadding(JComponent component, int vertical, int horizontal) {
-        Border currentBorder = component.getBorder();
-        Border padding = BorderFactory.createEmptyBorder(vertical, horizontal, vertical, horizontal);
-        
-        if (currentBorder instanceof CompoundBorder) {
-            CompoundBorder compoundBorder = (CompoundBorder) currentBorder;
-            
-            if (compoundBorder.getInsideBorder() instanceof EmptyBorder) {
-                currentBorder = compoundBorder.getOutsideBorder();
-            }
-        }
-        
-        else if (currentBorder instanceof EmptyBorder) {
-            currentBorder = null;
-        }
-        
-        component.setBorder(currentBorder == null
-            ? padding
-            : BorderFactory.createCompoundBorder(currentBorder, padding)
-        );
+        setPadding(component, vertical, horizontal, vertical, horizontal);
     }
     
-    public static void setPadding(JComponent component, int pad) {
-        Border currentBorder = component.getBorder();
-        Border padding = BorderFactory.createEmptyBorder(pad, pad, pad, pad);
+    // PONE UN MARGEN INTERNO DISTINTO EN CADA LADO Y CONSERVA EL BORDE
+    public static void setPadding(JComponent component, int top, int left, int bottom, int right) {
+        Border padding = BorderFactory.createEmptyBorder(top, left, bottom, right);
+        Border remainingBorder = removePadding(component.getBorder());
         
-        if (currentBorder instanceof CompoundBorder) {
-            CompoundBorder compoundBorder = (CompoundBorder) currentBorder;
-            
-            if (compoundBorder.getInsideBorder() instanceof EmptyBorder) {
-                currentBorder = compoundBorder.getOutsideBorder();
-            }
-        }
-        
-        else if (currentBorder instanceof EmptyBorder) {
-            currentBorder = null;
-        }
-        
-        component.setBorder(currentBorder == null
-            ? padding
-            : BorderFactory.createCompoundBorder(currentBorder, padding)
-        );
+        component.setBorder(combine(remainingBorder, padding));
     }
     
-    public static void setBackground(JComponent component, Color color) {
-        component.setBackground(color);
-    }
-    
-    public static void setForeground(JComponent component, Color color) {
-        component.setForeground(color);
-    }
-    
+    // CAMBIA EL TAMAÑO Y EL GROSOR DE LA FUENTE
     public static void setFont(JComponent component, float size, boolean bold) {
         int style = bold ? Font.BOLD : Font.PLAIN;
+        
         component.setFont(component.getFont().deriveFont(style, size));
     }
     
+    // CAMBIA EL TAMAÑO DE LA FUENTE Y LA DEJA SIN NEGRILLA
     public static void setFont(JComponent component, float size) {
-        component.setFont(component.getFont().deriveFont(Font.PLAIN, size));
+        setFont(component, size, false);
     }
     
-    public static void setOpaque(JComponent component, boolean opaque) {
-        component.setOpaque(opaque);
+    // PONE UN BORDE POR FUERA Y REEMPLAZA EL BORDE DE LINEA QUE HUBIERA
+    private static void setOuterBorder(JComponent component, Border outerBorder) {
+        Border remainingBorder = removeLineBorder(component.getBorder());
+        
+        component.setBorder(combine(outerBorder, remainingBorder));
     }
     
-    public static void setBorderPainted(AbstractButton button, boolean painted) {
-        button.setBorderPainted(painted);
+    // QUITA EL BORDE DE LINEA EXTERIOR Y DEVUELVE LO QUE QUEDA
+    private static Border removeLineBorder(Border border) {
+        if (border instanceof CompoundBorder compoundBorder) {
+            if (isLineBorder(compoundBorder.getOutsideBorder())) {
+                return compoundBorder.getInsideBorder();
+            }
+            
+            return border;
+        }
+        
+        if (isLineBorder(border)) {
+            return null;
+        }
+        
+        return border;
     }
     
-    public static void setFocusPainted(AbstractButton button, boolean painted) {
-        button.setFocusPainted(painted);
+    // QUITA EL MARGEN INTERIOR Y DEVUELVE LO QUE QUEDA
+    private static Border removePadding(Border border) {
+        if (border instanceof CompoundBorder compoundBorder) {
+            if (compoundBorder.getInsideBorder() instanceof EmptyBorder) {
+                return compoundBorder.getOutsideBorder();
+            }
+            
+            return border;
+        }
+        
+        if (border instanceof EmptyBorder) {
+            return null;
+        }
+        
+        return border;
+    }
+    
+    // DICE SI EL BORDE ES DE LINEA SIMPLE O DE GROSOR POR LADO
+    private static boolean isLineBorder(Border border) {
+        return border instanceof LineBorder || border instanceof MatteBorder;
+    }
+    
+    // JUNTA DOS BORDES, SI UNO FALTA DEVUELVE EL OTRO
+    private static Border combine(Border outer, Border inner) {
+        if (outer == null) return inner;
+        if (inner == null) return outer;
+        
+        return BorderFactory.createCompoundBorder(outer, inner);
     }
 }

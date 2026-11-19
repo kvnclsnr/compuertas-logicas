@@ -1,18 +1,19 @@
 package com.ui.components.truthTable;
 
-import com.ui.styles.Palette;
-import com.ui.styles.Styles;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
+import com.ui.styles.Palette;
+
+// SECCION DE UN CIRCUITO, SU TITULO FIJO ARRIBA Y SU TABLA CON SCROLL DEBAJO
 public class CircuitSection extends JPanel {
     private static final int TITLE_GAP = 4;
     
-    // CREA LA SECCIÓN DE UN CIRCUITO: SU TÍTULO FIJO ARRIBA Y SU TABLA CON SCROLL DEBAJO
+    // CREA LA SECCION CON EL TITULO NUMERADO Y LA TABLA
     public CircuitSection(String[][] truthTable, int circuitNumber) {
         super(new BorderLayout(0, TITLE_GAP));
         
-        Styles.setBackground(this, Palette.SURFACE);
+        setBackground(Palette.SURFACE);
         
         add(new CircuitTitle(circuitNumber), BorderLayout.NORTH);
         add(new TableScrollPane(new CircuitTable(truthTable)), BorderLayout.CENTER);

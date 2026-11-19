@@ -3,18 +3,24 @@ package com.ui.icons;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 
+import com.engine.gates.OrGate;
+
+// DIBUJO DE LA COMPUERTA OR
 public class Or extends LogicGate {
     private static int counter = 0;
     
+    // CREA LA COMPUERTA CON SU NOMBRE NUMERADO
     public Or(int size) {
-        super(size);
-        this.engineGate = new com.engine.gates.OrGate("OR-" + (counter++));
+        super(size, ElementType.OR);
+        this.engineGate = new OrGate("OR-" + (counter++));
     }
     
+    // CREA LA COMPUERTA CON EL TAMAÑO POR DEFECTO
     public Or() {
-        this(240);
+        this(DEFAULT_SIZE);
     }
     
+    // DIBUJA LAS PATAS Y EL CUERPO
     @Override
     protected void drawGate(Graphics2D g2d) {
         Path2D.Double paths = new Path2D.Double();

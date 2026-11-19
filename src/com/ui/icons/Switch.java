@@ -1,161 +1,87 @@
 package com.ui.icons;
 
-import com.engine.LogicInput;
-import com.ui.circuit.pin.Pin;
-import com.ui.layouts.canvas.Canvas;
-import com.ui.styles.Palette;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.geom.Ellipse2D;
-import javax.swing.JPanel;
+import java.awt.geom.Line2D;
 
-public class Switch extends JPanel {
-    
-    private static final int VIEW_SIZE = 28;
-    private static final double PIN_RADIUS = 1.5;
-    
-    private static final double PIN_X = 26;
-    private static final double PIN_Y = 14;
-    
-    private final int iconSize;
-    private final LogicInput logicInput;
+import com.engine.LogicInput;
+import com.engine.LogicSource;
+import com.engine.circuit.CircuitManager;
+
+// INTERRUPTOR QUE ENTREGA UN 1 O UN 0 A LAS COMPUERTAS, SE CAMBIA CON UN CLIC
+public class Switch extends CircuitElement {
+    private static final String NAME_PREFIX = "IN-";
+    private static final int[] NO_INPUT_PINS = { };
+    private static final double BODY_CENTER_X = 11.67;
+    private static final double BODY_RADIUS = 7;
+    private static final double ACTIVE_FILL_RATIO = 0.75;
     
     private static int counter = 0;
     
-    // CREA EL INTERRUPTOR Y SU ENTRADA LÓGICA
+    private final LogicInput logicInput;
+    
+    // CREA EL INTERRUPTOR APAGADO CON SU ENTRADA LOGICA
     public Switch(int size) {
-        if (size <= 0) {
-            size = 240;
-        }
-        this.iconSize = size;
-        this.logicInput = new LogicInput("IN-" + (counter++), false);
-        
-        Dimension preferredSize = new Dimension(size, size);
-        setPreferredSize(preferredSize);
-        setMinimumSize(preferredSize);
-        setOpaque(false);
+        super(size, ElementType.INPUT);
+        logicInput = new LogicInput(NAME_PREFIX + counter++);
     }
     
-    // CAMBIA EL ESTADO DE LA ENTRADA Y ACTUALIZA EL DIBUJO
-    public void toggle() {
+    // DEVUELVE EL NOMBRE DE LA ENTRADA LOGICA
+    @Override
+    public String getElementName() {
+        return logicInput.getName();
+    }
+    
+    // DEVUELVE SI EL INTERRUPTOR ESTA ENCENDIDO
+    @Override
+    public boolean getOutputValue() {
+        return logicInput.getValue();
+    }
+    
+    // LA SEÑAL DE SALIDA ES LA ENTRADA LOGICA
+    @Override
+    public LogicSource getOutputSource() {
+        return logicInput;
+    }
+    
+    // UN INTERRUPTOR SIN CABLES NO FORMA PARTE DE NINGUN CIRCUITO
+    @Override
+    public void addToCircuits(CircuitManager circuits) { }
+    
+    // AL QUITAR UN INTERRUPTOR LOS CIRCUITOS QUE UNIA PUEDEN SEPARARSE
+    @Override
+    public void removeFromCircuits(CircuitManager circuits) {
+        circuits.reorganize();
+    }
+    
+    // EL INTERRUPTOR NO TIENE ENTRADAS
+    @Override
+    protected int[] getInputPinYPositions() {
+        return NO_INPUT_PINS;
+    }
+    
+    // UN CLIC ENCIENDE O APAGA EL INTERRUPTOR
+    @Override
+    public void click() {
         logicInput.setValue(!logicInput.getValue());
         repaint();
     }
     
-    // INDICA SI EL INTERRUPTOR ESTÁ ENCENDIDO
-    public boolean isOn() {
-        return logicInput.getValue();
-    }
-    
-    // DEVUELVE LA ENTRADA LÓGICA DEL INTERRUPTOR
-    public LogicInput getLogicInput() {
-        return logicInput;
-    }
-    
-    // CALCULA LA POSICIÓN DEL PIN DE SALIDA
-    public Pin getOutputPin() {
-        int width = getWidth() > 0 ? getWidth() : iconSize;
-        int height = getHeight() > 0 ? getHeight() : iconSize;
-        
-        double renderedSize = Math.min(iconSize, Math.min(width, height));
-        double scale = renderedSize / VIEW_SIZE;
-        
-        double offsetX = (width - VIEW_SIZE * scale) / 2.0;
-        double offsetY = (height - VIEW_SIZE * scale) / 2.0;
-        
-        int x = (int) Math.round(offsetX + PIN_X * scale);
-        int y = (int) Math.round(offsetY + PIN_Y * scale);
-        
-        return new Pin(this, Pin.Type.OUTPUT, x, y, 0);
-    }
-    
-    // DIBUJA EL CUERPO Y LA CONEXIÓN DEL INTERRUPTOR
-    private void drawSwitch(Graphics2D g2d, boolean active) {
-        double centerX = VIEW_SIZE * 5.0 / 12;
-        double centerY = VIEW_SIZE / 2.0;
-        double outerRadius = VIEW_SIZE / 4.0;
-        double outerDiameter = outerRadius * 2;
-        
-        Color color = active ? Palette.ACCENT : Palette.INK;
-        g2d.setColor(color);
-        g2d.setStroke(new BasicStroke(1.1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        g2d.drawLine(
-            (int) Math.round(centerX + outerRadius),
-            (int) centerY,
-            (int) PIN_X,
-            (int) PIN_Y
-        );
-        
-        g2d.setColor(color);
-        g2d.draw(new Ellipse2D.Double(
-            centerX - outerRadius,
-            centerY - outerRadius,
-            outerDiameter,
-            outerDiameter
-        ));
-        
-        double innerRadius = outerRadius * (active ? 0.75 : 0);
-        g2d.setColor(color);
-        g2d.fill(new Ellipse2D.Double(
-            centerX - innerRadius,
-            centerY - innerRadius,
-            innerRadius * 2,
-            innerRadius * 2
-        ));
-    }
-    
-    // DIBUJA EL TERMINAL DEL PIN DE SALIDA
-    private void drawPinTerminal(Graphics2D g2d) {
-        double diameter = PIN_RADIUS * 2;
-        g2d.setStroke(new BasicStroke(0.5f));
-        
-        g2d.setColor(Palette.SURFACE);
-        g2d.fill(new Ellipse2D.Double(
-            PIN_X - PIN_RADIUS,
-            PIN_Y - PIN_RADIUS,
-            diameter,
-            diameter
-        ));
-        
-        g2d.setColor(Palette.LINE);
-        g2d.draw(new Ellipse2D.Double(
-            PIN_X - PIN_RADIUS,
-            PIN_Y - PIN_RADIUS,
-            diameter,
-            diameter
-        ));
-    }
-    
-    // DIBUJA EL INTERRUPTOR Y SU TERMINAL CUANDO CORRESPONDE
+    // DIBUJA LA PATA, EL CIRCULO Y EL RELLENO CUANDO ESTA ENCENDIDO
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    protected void drawBody(Graphics2D g2d) {
+        g2d.draw(new Line2D.Double(BODY_CENTER_X + BODY_RADIUS, CENTER_Y, OUTPUT_PIN_X, CENTER_Y));
+        g2d.draw(createCircle(BODY_RADIUS));
         
-        Graphics2D g2d = (Graphics2D) g.create();
-        
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-        
-        boolean inCanvas = getParent() instanceof Canvas;
-        boolean active = inCanvas && isOn();
-        
-        double renderedSize = Math.min(iconSize, Math.min(getWidth(), getHeight()));
-        double scale = renderedSize / VIEW_SIZE;
-        double offsetX = (getWidth() - VIEW_SIZE * scale) / 2.0;
-        double offsetY = (getHeight() - VIEW_SIZE * scale) / 2.0;
-        
-        g2d.translate(offsetX, offsetY);
-        g2d.scale(scale, scale);
-        
-        drawSwitch(g2d, active);
-        if (inCanvas) {
-            drawPinTerminal(g2d);
+        if (isActive()) {
+            g2d.fill(createCircle(BODY_RADIUS * ACTIVE_FILL_RATIO));
         }
+    }
+    
+    // CREA UN CIRCULO CENTRADO EN EL CUERPO DEL INTERRUPTOR
+    private Ellipse2D createCircle(double radius) {
+        double diameter = radius * 2;
         
-        g2d.dispose();
+        return new Ellipse2D.Double(BODY_CENTER_X - radius, CENTER_Y - radius, diameter, diameter);
     }
 }

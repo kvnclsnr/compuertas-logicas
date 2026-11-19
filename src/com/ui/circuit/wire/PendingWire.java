@@ -1,58 +1,59 @@
 package com.ui.circuit.wire;
-import com.ui.circuit.pin.Pin;
 
-import com.ui.styles.Palette;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.geom.CubicCurve2D;
 
-// El cable punteado que sigue al mouse mientras se arrastra desde un pin
+import com.ui.circuit.pin.Pin;
+import com.ui.styles.Palette;
+
+// CABLE PUNTEADO QUE SIGUE AL MOUSE MIENTRAS SE ARRASTRA DESDE UN PIN
 public class PendingWire {
-    private Pin pin = null;
+    private static final float[] DASH_PATTERN = { 6f, 6f };
+    private static final BasicStroke STROKE = new BasicStroke(
+        2.2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10f, DASH_PATTERN, 0f
+    );
+    private static final int GUIDE_DOT_RADIUS = 4;
+    
+    private Pin startPin = null;
     private Point mousePoint = null;
     
+    // DICE SI HAY UN CABLE EN PROCESO DE CONEXION
     public boolean isActive() {
-        return pin != null;
+        return startPin != null;
     }
     
-    public Pin getPin() {
-        return pin;
+    // DEVUELVE EL PIN DESDE DONDE SE EMPEZO A ARRASTRAR
+    public Pin getStartPin() {
+        return startPin;
     }
     
-    public void start(Pin pin, Point mousePoint) {
-        this.pin = pin;
+    // EMPIEZA UN CABLE DESDE UN PIN
+    public void start(Pin startPin, Point mousePoint) {
+        this.startPin = startPin;
         this.mousePoint = mousePoint;
     }
     
+    // MUEVE EL EXTREMO LIBRE DEL CABLE HASTA EL MOUSE
     public void moveTo(Point mousePoint) {
         this.mousePoint = mousePoint;
     }
     
+    // CANCELA EL CABLE EN PROCESO
     public void clear() {
-        this.pin = null;
-        this.mousePoint = null;
+        startPin = null;
+        mousePoint = null;
     }
     
+    // DIBUJA LA CURVA PUNTEADA Y UN PUNTO GUIA EN EL MOUSE
     public void draw(Graphics2D g2d) {
-        if (pin == null || mousePoint == null) return;
-        
-        Point start = pin.getLocationOnCanvas();
+        if (!isActive()) return;
         
         g2d.setColor(Palette.ACCENT);
-        g2d.setStroke(new BasicStroke(2.2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10.0f, new float[]{6.0f, 6.0f}, 0.0f));
+        g2d.setStroke(STROKE);
+        g2d.draw(WireCurve.create(startPin.getLocationOnCanvas(), mousePoint));
         
-        int dx = Math.abs(mousePoint.x - start.x);
-        int controlDist = Math.max(25, dx / 2);
-        CubicCurve2D curve = new CubicCurve2D.Double(
-            start.x, start.y,
-            start.x + controlDist, start.y,
-            mousePoint.x - controlDist, mousePoint.y,
-            mousePoint.x, mousePoint.y
-        );
-        g2d.draw(curve);
-        
-        // Punto guía en el cursor
-        g2d.fillOval(mousePoint.x - 4, mousePoint.y - 4, 8, 8);
+        int diameter = GUIDE_DOT_RADIUS * 2;
+        g2d.fillOval(mousePoint.x - GUIDE_DOT_RADIUS, mousePoint.y - GUIDE_DOT_RADIUS, diameter, diameter);
     }
 }

@@ -1,32 +1,28 @@
 package com.ui.circuit.pin;
 
-import com.engine.LogicSource;
-import com.ui.icons.LogicGate;
-import com.ui.icons.Switch;
-
 import java.awt.Point;
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
 
+import com.ui.icons.CircuitElement;
+
+// PUNTO DE CONEXION DE UN ELEMENTO, PUEDE SER DE ENTRADA O DE SALIDA
 public class Pin {
-    private static final int COMPONENT_HIT_RADIUS = 12;
+    private static final int OWNER_HIT_RADIUS = 12;
     private static final int CANVAS_HIT_RADIUS = 14;
     
+    // INDICA SI EL PIN RECIBE LA SEÑAL O LA ENTREGA
     public enum Type {
         INPUT,
         OUTPUT
     }
     
-    private final JComponent owner;
+    private final CircuitElement owner;
     private final Type type;
-    
     private final int relativeX;
     private final int relativeY;
-    
     private final int index;
     
-    // CREA UN PIN QUE PERTENECE A UN COMPONENTE, EN UNA POSICIÓN RELATIVA A ÉL
-    public Pin(JComponent owner, Type type, int relativeX, int relativeY, int index) {
+    // CREA UN PIN DE UN ELEMENTO EN UNA POSICION RELATIVA A EL
+    public Pin(CircuitElement owner, Type type, int relativeX, int relativeY, int index) {
         this.owner = owner;
         this.type = type;
         this.relativeX = relativeX;
@@ -34,86 +30,43 @@ public class Pin {
         this.index = index;
     }
     
-    // DEVUELVE SI EL PIN ES DE ENTRADA O DE SALIDA
+    // DEVUELVE SI ES UN PIN DE ENTRADA O DE SALIDA
     public Type getType() {
         return type;
     }
     
-    // DEVUELVE EL COMPONENTE AL QUE PERTENECE EL PIN
-    public JComponent getOwner() {
+    // DEVUELVE EL ELEMENTO AL QUE PERTENECE EL PIN
+    public CircuitElement getOwner() {
         return owner;
     }
     
-    // DEVUELVE EL NÚMERO DEL PIN DENTRO DE SU COMPUERTA
+    // DEVUELVE EL NUMERO DEL PIN DENTRO DE SU ELEMENTO
     public int getIndex() {
         return index;
     }
     
-    // DEVUELVE LA POSICIÓN HORIZONTAL DEL PIN DENTRO DE SU COMPONENTE
-    public int getRelativeX() {
-        return relativeX;
-    }
-    
-    // DEVUELVE LA POSICIÓN VERTICAL DEL PIN DENTRO DE SU COMPONENTE
-    public int getRelativeY() {
-        return relativeY;
-    }
-    
-    // DEVUELVE LA POSICIÓN DEL PIN SOBRE EL LIENZO
+    // DEVUELVE LA POSICION DEL PIN SOBRE EL LIENZO
     public Point getLocationOnCanvas() {
-        if (owner.getParent() == null) {
-            return new Point(owner.getX() + relativeX, owner.getY() + relativeY);
-        }
-        
-        return SwingUtilities.convertPoint(owner, relativeX, relativeY, owner.getParent());
+        return new Point(owner.getX() + relativeX, owner.getY() + relativeY);
     }
     
-    // DICE SI UN PUNTO, EN COORDENADAS DEL COMPONENTE DUEÑO, ESTÁ SOBRE EL PIN
-    public boolean containsInComponent(Point point) {
-        return isWithinRadius(point.x - relativeX, point.y - relativeY, COMPONENT_HIT_RADIUS);
+    // DICE SI UN PUNTO, MEDIDO DENTRO DEL ELEMENTO, ESTA SOBRE EL PIN
+    public boolean containsInOwner(Point pointInOwner) {
+        return isWithinRadius(new Point(relativeX, relativeY), pointInOwner, OWNER_HIT_RADIUS);
     }
     
-    // DICE SI UN PUNTO DEL LIENZO ESTÁ SOBRE EL PIN
+    // DICE SI UN PUNTO DEL LIENZO ESTA SOBRE EL PIN
     public boolean containsOnCanvas(Point canvasPoint) {
-        Point pinPosition = getLocationOnCanvas();
-        
-        return isWithinRadius(
-            canvasPoint.x - pinPosition.x,
-            canvasPoint.y - pinPosition.y,
-            CANVAS_HIT_RADIUS
-        );
+        return isWithinRadius(getLocationOnCanvas(), canvasPoint, CANVAS_HIT_RADIUS);
     }
     
-    // DICE SI LA DISTANCIA AL CENTRO DEL PIN (DX, DY) NO PASA DEL RADIO
-    private boolean isWithinRadius(int dx, int dy, int radius) {
-        return dx * dx + dy * dy <= radius * radius;
+    // DICE SI OTRO PIN ES EL MISMO PIN DEL MISMO ELEMENTO
+    public boolean isSamePinAs(Pin other) {
+        return owner == other.owner && type == other.type && index == other.index;
     }
     
-    // DEVUELVE EL VALOR DE LA SALIDA DEL PIN, O FALSO SI ES UNA ENTRADA
-    public boolean getValue() {
-        if (type != Type.OUTPUT) return false;
-        
-        if (owner instanceof Switch switchIcon) {
-            return switchIcon.isOn();
-        }
-        
-        if (owner instanceof LogicGate gate) {
-            return gate.getOutputValue();
-        }
-        
-        return false;
-    }
-    
-    // DEVUELVE LA PARTE DEL MOTOR DE DONDE SALE LA SEÑAL DE ESTE PIN, O NULL SI NO HAY
-    public LogicSource getLogicSource() {
-        if (owner instanceof Switch switchIcon) {
-            return switchIcon.getLogicInput();
-        }
-        
-        if (owner instanceof LogicGate gate) {
-            return gate.getEngineGate();
-        }
-        
-        return null;
+    // DICE SI UN PUNTO ESTA A UNA DISTANCIA DEL CENTRO IGUAL O MENOR QUE EL RADIO
+    private boolean isWithinRadius(Point center, Point point, int radius) {
+        return center.distance(point) <= radius;
     }
 }

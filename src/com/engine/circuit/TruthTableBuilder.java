@@ -10,6 +10,7 @@ import java.util.Set;
 
 import com.engine.LogicInput;
 import com.engine.LogicSource;
+import com.engine.gates.BulbGate;
 import com.engine.gates.Gate;
 
 // CONSTRUYE LA TABLA DE VERDAD DE UN GRUPO DE COMPUERTAS SIN DEJARLAS MODIFICADAS
@@ -78,7 +79,7 @@ public final class TruthTableBuilder {
         }
     }
     
-    // REUNE LAS ENTRADAS Y EL ORDEN DE EVALUACION, Y AVISA SI HAY DEMASIADAS ENTRADAS
+    // REUNE LAS ENTRADAS Y EL ORDEN DE EVALUACION, QUITA LOS FOCOS Y AVISA SI HAY DEMASIADAS ENTRADAS
     private static String[][] createTable(List<Gate> gates) {
         Set<LogicInput> inputSet = new LinkedHashSet<>();
         List<Gate> evaluationOrder = new ArrayList<>();
@@ -89,12 +90,26 @@ public final class TruthTableBuilder {
         }
         
         List<LogicInput> inputs = new ArrayList<>(inputSet);
+        List<Gate> displayedGates = removeBulbs(evaluationOrder);
         
         if (inputs.size() > MAX_INPUTS) {
             return new String[][] { { TOO_MANY_INPUTS_MESSAGE } };
         }
         
-        return createRows(inputs, evaluationOrder);
+        return createRows(inputs, displayedGates);
+    }
+    
+    // QUITA LOS FOCOS DEL ORDEN DE EVALUACION, SOLO SIRVEN PARA MOSTRAR EL RESULTADO EN EL LIENZO
+    private static List<Gate> removeBulbs(List<Gate> evaluationOrder) {
+        List<Gate> displayedGates = new ArrayList<>();
+        
+        for (Gate gate : evaluationOrder) {
+            if (!(gate instanceof BulbGate)) {
+                displayedGates.add(gate);
+            }
+        }
+        
+        return displayedGates;
     }
     
     // ARMA EL ENCABEZADO Y UNA FILA POR CADA COMBINACION DE ENTRADAS

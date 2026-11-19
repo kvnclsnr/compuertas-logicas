@@ -1,42 +1,48 @@
 package com.ui.circuit.wire;
 
-import com.ui.circuit.pin.Pin;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JComponent;
+
+import com.ui.circuit.pin.Pin;
+import com.ui.icons.CircuitElement;
 
 // GUARDA LOS CABLES DEL LIENZO Y SABE BUSCARLOS
 public class WireList {
     private final List<Wire> wires = new ArrayList<>();
     
-    // AGREGA UN CABLE A LA LISTA
+    // AGREGA UN CABLE
     public void add(Wire wire) {
         wires.add(wire);
     }
     
-    // QUITA UN CABLE DE LA LISTA
+    // QUITA UN CABLE
     public void remove(Wire wire) {
         wires.remove(wire);
     }
     
-    // BUSCA EL CABLE QUE LLEGA A ESA ENTRADA, O DEVUELVE NULL SI NO TIENE
-    public Wire findConnectedToInput(Pin inputPin) {
+    // DEVUELVE UNA COPIA CON TODOS LOS CABLES
+    public List<Wire> getAll() {
+        return new ArrayList<>(wires);
+    }
+    
+    // BUSCA EL CABLE QUE TERMINA EN ESE PIN, O DEVUELVE NULL SI NO HAY
+    public Wire findEndingAt(Pin pin) {
         for (Wire wire : wires) {
-            if (wire.getTarget().getOwner() == inputPin.getOwner()
-                && wire.getTarget().getIndex() == inputPin.getIndex()) {
+            if (wire.getTarget().isSamePinAs(pin)) {
                 return wire;
             }
         }
+        
         return null;
     }
     
-    // DEVUELVE UNA COPIA CON LOS CABLES QUE SALEN DEL DUEÑO DE ESE PIN
-    public List<Wire> findFromSourceOf(Pin pin) {
+    // DEVUELVE UNA COPIA CON LOS CABLES QUE SALEN DE ESE ELEMENTO
+    public List<Wire> findStartingAt(CircuitElement element) {
         List<Wire> found = new ArrayList<>();
         
         for (Wire wire : wires) {
-            if (wire.getSource().getOwner() == pin.getOwner()) {
+            if (wire.getSource().getOwner() == element) {
                 found.add(wire);
             }
         }
@@ -44,12 +50,12 @@ public class WireList {
         return found;
     }
     
-    // DEVUELVE UNA COPIA CON LOS CABLES QUE ENTRAN O SALEN DE ESA COMPUERTA
-    public List<Wire> findConnectedTo(JComponent gate) {
+    // DEVUELVE UNA COPIA CON LOS CABLES QUE ENTRAN O SALEN DE ESE ELEMENTO
+    public List<Wire> findConnectedTo(CircuitElement element) {
         List<Wire> found = new ArrayList<>();
         
         for (Wire wire : wires) {
-            if (wire.isConnectedTo(gate)) {
+            if (wire.isConnectedTo(element)) {
                 found.add(wire);
             }
         }
