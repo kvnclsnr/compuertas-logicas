@@ -72,9 +72,6 @@ public class TopBar extends JPanel {
                 new MenuOption("Abrir", new TextImportAction(canvas)),
                 new MenuOption("Guardar", new TextExportAction(canvas))
             }),
-            new Menu("Ayuda", new MenuOption[] {
-                new MenuOption("Acerca de")
-            })
         };
     }
     
