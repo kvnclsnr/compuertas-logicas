@@ -60,6 +60,11 @@ public class CircuitManager {
         return circuit;
     }
     
+    // DEVUELVE UNA COPIA CON LOS CIRCUITOS ACTUALES
+    public List<Circuit> getCircuits() {
+        return new ArrayList<>(circuits);
+    }
+    
     // JUNTA LAS COMPUERTAS DE TODOS LOS CIRCUITOS
     private List<Gate> getAllGates() {
         List<Gate> gates = new ArrayList<>();

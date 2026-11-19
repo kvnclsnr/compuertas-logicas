@@ -13,6 +13,7 @@ import com.ui.components.menu.ExportButton;
 import com.ui.components.menu.MenuButton;
 import com.ui.components.menu.MenuOption;
 import com.ui.export.TextExportAction;
+import com.ui.export.TruthTableExportAction;
 import com.ui.importer.TextImportAction;
 import com.ui.layouts.canvas.Canvas;
 import com.ui.styles.Palette;
@@ -93,7 +94,7 @@ public class TopBar extends JPanel {
     private ExportButton createExportButton(Canvas canvas) {
         MenuOption[] options = {
             new MenuOption(EXPORT_TEXT_LABEL, new TextExportAction(canvas)),
-            new MenuOption(EXPORT_TRUTH_TABLE_LABEL)
+            new MenuOption(EXPORT_TRUTH_TABLE_LABEL, new TruthTableExportAction(canvas))
         };
         
         return new ExportButton(EXPORT_LABEL, options);

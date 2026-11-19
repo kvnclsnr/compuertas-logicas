@@ -20,7 +20,9 @@ import javax.swing.JViewport;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 
+import com.engine.circuit.Circuit;
 import com.engine.circuit.CircuitManager;
+import com.engine.circuit.TruthTablePrinter;
 import com.ui.circuit.pin.Pin;
 import com.ui.circuit.wire.PendingWire;
 import com.ui.circuit.wire.Wire;
@@ -389,5 +391,16 @@ public class Canvas extends JPanel implements Scrollable {
         if (circuitChangeListener != null) {
             circuitChangeListener.circuitChanged();
         }
+    }
+    
+    // DEVUELVE EL TEXTO DE LA TABLA DE VERDAD DE TODOS LOS CIRCUITOS, IGUAL AL QUE SE IMPRIME EN LA CONSOLA
+    public String getTruthTableText() {
+        StringBuilder text = new StringBuilder();
+        
+        for (Circuit circuit : circuits.getCircuits()) {
+            text.append(TruthTablePrinter.format(circuit));
+        }
+        
+        return text.toString();
     }
 }
